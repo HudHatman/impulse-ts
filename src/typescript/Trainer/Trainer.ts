@@ -14,7 +14,7 @@ export class Trainer extends AbstractTrainer {
     for (let i = 0; i < this.iterations; i += 1) {
       const startTime = new Date().getTime();
 
-      this.network.backward(inputDataset.data, outputDataset.data, this.regularization);
+      this.network.backward(inputDataset.data.transpose(), outputDataset.data.transpose(), this.regularization);
 
       this.optimizer.setT(++t);
 

@@ -67,9 +67,8 @@ export abstract class AbstractTrainer {
     this.network.getLayers().forEach((layer) => {
       penalty += layer.penalty();
     });
-
-    const predictions = this.network.forward(inputDataset.data);
-    const correctOutput = outputDataset.data;
+    const predictions = this.network.forward(inputDataset.data.transpose());
+    const correctOutput = outputDataset.data.transpose();
 
     /*const error = Y.multiply(predictions.log())
       .add(Y.minusOne().multiply(predictions.minusOne().log()))
