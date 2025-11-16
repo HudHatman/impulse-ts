@@ -1,7 +1,6 @@
 import { CalcMatrix2D } from "impulse-math-device-ts";
 import { LayerType } from "../types";
 import { AbstractLayer1D } from "./AbstractLayer1D";
-import { getComputation } from "impulse-math-ts";
 
 class ReluLayer extends AbstractLayer1D {
   activation(m: CalcMatrix2D): CalcMatrix2D {
@@ -13,7 +12,7 @@ class ReluLayer extends AbstractLayer1D {
   }
 
   derivative(delta: CalcMatrix2D) {
-    return getComputation().execute("reluBackpropagation", delta, this.A) as CalcMatrix2D;
+    return delta.reluBackpropagation();
   }
 }
 

@@ -67,7 +67,7 @@ abstract class AbstractLayer1D extends AbstractLayer {
   }
 
   forward(input: CalcMatrix2D): CalcMatrix2D {
-    //this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols));
+    this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols));
     this.A = this.activation(this.Z);
     return this.A;
   }
