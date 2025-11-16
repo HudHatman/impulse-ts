@@ -78,9 +78,9 @@ abstract class AbstractLayer {
     return 0;
   }
 
-    public error(batchSize: number) {
-        return 0;
-    }
+  public error(batchSize: number) {
+    return 0;
+  }
 }
 
 export { AbstractLayer };

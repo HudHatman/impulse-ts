@@ -39,19 +39,17 @@ class Network {
     let sigma = predictions.subtract(Y);
 
     for (let layer = this.layers.length - 1; layer >= 0; layer -= 1) {
-      sigma = this.layers[layer]
-        .getBackPropagation()
-        .propagate(X, m, regularization, this.layers[layer], sigma);
+      sigma = this.layers[layer].getBackPropagation().propagate(X, m, regularization, this.layers[layer], sigma);
     }
   }
 
-    public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
-      return this.layers[this.layers.length - 1].loss(correctOutput, predictions);
-    }
+  public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
+    return this.layers[this.layers.length - 1].loss(correctOutput, predictions);
+  }
 
-    public error(miniBatchSize: number) {
-        return this.layers[this.layers.length - 1].error(miniBatchSize);
-    }
+  public error(miniBatchSize: number) {
+    return this.layers[this.layers.length - 1].error(miniBatchSize);
+  }
 
   save(path: string): Promise<string> {
     const resultJSON = {

@@ -73,24 +73,26 @@ export abstract class AbstractTrainer {
     const correctOutput = outputDataset.data.transpose();
 
     const miniBatchSize = correctOutput.cols();
+    console.log("SIZE", miniBatchSize);
     const loss = this.network.loss(correctOutput, predictions);
     const error = this.network.error(miniBatchSize);
 
-  cost = (error * loss + ((this.regularization * penalty) / (2.0 * miniBatchSize))) /
+    cost =
+      (error * loss + (this.regularization * penalty) / (2.0 * miniBatchSize)) /
       (miniBatchSize * (miniBatchSize / miniBatchSize));
 
-  for (let i = 0; i < predictions.cols(); i += 1) {
+    for (let i = 0; i < predictions.cols(); i += 1) {
       const p = predictions.col(i).maxCoeff();
       const o = correctOutput.col(i).maxCoeff();
 
       if (p.get()[0] === o.get()[0]) {
-          accuracy++;
+        accuracy++;
       }
-  }
+    }
 
-      return {
-          cost,
-          accuracy: ((accuracy - 1.0) / numberOfExamples * 100.0),
-      }
+    return {
+      cost,
+      accuracy: ((accuracy - 1.0) / numberOfExamples) * 100.0,
+    };
   }
 }

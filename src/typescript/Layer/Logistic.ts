@@ -14,14 +14,16 @@ class LogisticLayer extends AbstractLayer1D {
   derivative(delta: CalcMatrix2D): CalcMatrix2D {
     return delta.logisticBackwardPropagation();
   }
-    public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
-        const result = (correctOutput.multiply(predictions.log())).add((correctOutput.minusOne()).multiply(predictions.logMinusOne()));
-        return result.sum().get()[0];
-    }
+  public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
+    const result = correctOutput
+      .multiply(predictions.log())
+      .add(correctOutput.minusOne().multiply(predictions.logMinusOne()));
+    return result.sum().get()[0];
+  }
 
-    public error(batchSize: number) {
-        return (-1.0 / batchSize);
-    }
+  public error(batchSize: number) {
+    return -1.0 / batchSize;
+  }
 }
 
 export { LogisticLayer };

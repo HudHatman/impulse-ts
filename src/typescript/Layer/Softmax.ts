@@ -12,7 +12,16 @@ class SoftmaxLayer extends AbstractLayer1D {
   }
 
   derivative(delta: CalcMatrix2D): CalcMatrix2D {
-    return delta.multiply(-1).add(1).fraction(1);
+    return delta.softmaxDerivative();
+  }
+
+  public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
+    const result = correctOutput.multiply(predictions.log());
+    return result.sum().get()[0];
+  }
+
+  public error(batchSize: number) {
+    return -1.0 / batchSize;
   }
 }
 

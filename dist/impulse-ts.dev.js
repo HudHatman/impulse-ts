@@ -825,7 +825,18 @@ var SoftmaxLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   }, {
     key: "derivative",
     value: function derivative(delta) {
-      return delta.multiply(-1).add(1).fraction(1);
+      return delta.softmaxDerivative();
+    }
+  }, {
+    key: "loss",
+    value: function loss(correctOutput, predictions) {
+      var result = correctOutput.multiply(predictions.log());
+      return result.sum().get()[0];
+    }
+  }, {
+    key: "error",
+    value: function error(batchSize) {
+      return -1.0 / batchSize;
     }
   }]);
 }(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
@@ -1655,6 +1666,7 @@ var AbstractTrainer = /*#__PURE__*/function () {
       var predictions = this.network.forward(inputDataset.data.transpose());
       var correctOutput = outputDataset.data.transpose();
       var miniBatchSize = correctOutput.cols();
+      console.log("SIZE", miniBatchSize);
       var loss = this.network.loss(correctOutput, predictions);
       var error = this.network.error(miniBatchSize);
       cost = (error * loss + this.regularization * penalty / (2.0 * miniBatchSize)) / (miniBatchSize * (miniBatchSize / miniBatchSize));

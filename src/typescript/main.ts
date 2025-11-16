@@ -32,7 +32,7 @@ const Layer = {
   ReluLayer,
   SoftplusLayer,
   TanhLayer,
- // ConvLayer,
+  // ConvLayer,
   //MaxPoolLayer,
   //FullyConnectedLayer,
   //RecurrentLayer,
