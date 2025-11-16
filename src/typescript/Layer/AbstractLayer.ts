@@ -6,7 +6,7 @@ abstract class AbstractLayer {
   protected width = 0;
   protected height = 0;
   protected depth = 0;
-  protected previousLayer: Layers | null = null;
+  public previousLayer: Layers | null = null;
   protected backPropagation: AbstractBackPropagation | null = null;
 
   constructor() {}
@@ -73,6 +73,14 @@ abstract class AbstractLayer {
   abstract derivative(delta: CalcMatrix2D): CalcMatrix2D;
 
   abstract penalty(): number;
+
+  public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
+    return 0;
+  }
+
+    public error(batchSize: number) {
+        return 0;
+    }
 }
 
 export { AbstractLayer };

@@ -35,15 +35,24 @@ class Network {
   backward(X: CalcMatrix2D, Y: CalcMatrix2D, regularization: number): void {
     const m = X.cols();
     const predictions = this.forward(X);
+    console.log(predictions, predictions.get(), Y, Y.get())
     //let sigma = Y.divide(predictions).multiply(-1).subtract(Y.minusOne().divide(predictions.minusOne()));
     let sigma = predictions.subtract(Y);
 
     for (let layer = this.layers.length - 1; layer >= 0; layer -= 1) {
       sigma = this.layers[layer]
         .getBackPropagation()
-        .propagate(X, m, regularization, this.layers[layer], this.layers[layer].derivative(sigma));
+        .propagate(X, m, regularization, this.layers[layer], sigma);
     }
   }
+
+    public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
+      return this.layers[this.layers.length - 1].loss(correctOutput, predictions);
+    }
+
+    public error(miniBatchSize: number) {
+        return this.layers[this.layers.length - 1].error(miniBatchSize);
+    }
 
   save(path: string): Promise<string> {
     const resultJSON = {

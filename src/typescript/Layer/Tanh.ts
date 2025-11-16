@@ -12,7 +12,7 @@ class TanhLayer extends AbstractLayer1D {
   }
 
   derivative(sigma: CalcMatrix2D): CalcMatrix2D {
-    return this.activation(sigma).pow(2).minusOne();
+    return sigma.tanhDerivative();
   }
 }
 

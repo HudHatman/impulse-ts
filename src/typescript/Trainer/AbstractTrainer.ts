@@ -63,34 +63,34 @@ export abstract class AbstractTrainer {
 
     let accuracy = 0;
     let penalty = 0;
+    let cost = 0;
 
     this.network.getLayers().forEach((layer) => {
-      penalty += layer.penalty().get();
+      penalty += layer.penalty().get()[0];
     });
 
-    console.log("PENALTY", penalty)
     const predictions = this.network.forward(inputDataset.data.transpose());
     const correctOutput = outputDataset.data.transpose();
 
-    /*const error = Y.multiply(predictions.log())
-      .add(Y.minusOne().multiply(predictions.minusOne().log()))
-      .multiply(-1)
-      .sum();
-    const error = correctOutput.multiply(predictions.log()).sum();
-    const cost = (-1 / numberOfExamples) * error + this.regularization / (penalty * (2 * inputDataset.data.cols));
+    const miniBatchSize = correctOutput.cols();
+    const loss = this.network.loss(correctOutput, predictions);
+    const error = this.network.error(miniBatchSize);
 
-    for (let col = 0; col < predictions.cols; col += 1) {
-      const index1 = predictions.colMaxCoeffIndex(col);
-      const index2 = correctOutput.colMaxCoeffIndex(col);
+  cost = (error * loss + ((this.regularization * penalty) / (2.0 * miniBatchSize))) /
+      (miniBatchSize * (miniBatchSize / miniBatchSize));
 
-      if (index1 === index2) {
-        accuracy++;
+  for (let i = 0; i < predictions.cols(); i += 1) {
+      const p = predictions.col(i).maxCoeff();
+      const o = correctOutput.col(i).maxCoeff();
+
+      if (p.get()[0] === o.get()[0]) {
+          accuracy++;
       }
-    }
+  }
 
-    return {
-      cost,
-      accuracy: (accuracy / numberOfExamples) * 100,
-    };*/
+      return {
+          cost,
+          accuracy: ((accuracy - 1.0) / numberOfExamples * 100.0),
+      }
   }
 }

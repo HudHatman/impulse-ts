@@ -89,6 +89,16 @@ var AbstractLayer = /*#__PURE__*/function () {
       this.previousLayer = previousLayer;
       return this;
     }
+  }, {
+    key: "loss",
+    value: function loss(correctOutput, predictions) {
+      return 0;
+    }
+  }, {
+    key: "error",
+    value: function error(batchSize) {
+      return 0;
+    }
   }]);
 }();
 
@@ -176,7 +186,7 @@ var AbstractLayer1D = /*#__PURE__*/function (_AbstractLayer) {
   }, {
     key: "forward",
     value: function forward(input) {
-      this.Z = this.W.dot(input).add(this.b);
+      this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols()));
       this.A = this.activation(this.Z);
       return this.A;
     }
@@ -305,22 +315,22 @@ var Backpropagation1Dto1D = /*#__PURE__*/function (_AbstractBackPropagat) {
     key: "propagate",
     value: function propagate(input, numberOfExamples, regularization, layer, sigma) {
       var previousActivations = this.previousLayer !== null ? this.previousLayer.A : input;
-      var delta = sigma.dot(previousActivations.transpose());
+      var delta = sigma.dot(previousActivations.transpose().conjugate());
       this.layer.gW = delta.divide(numberOfExamples).add(layer.W.multiply(regularization / numberOfExamples));
-      this.layer.gb = sigma.rowwiseSum().transpose().divide(numberOfExamples);
+      this.layer.gb = sigma.rowwiseSum().divide(numberOfExamples);
       if (this.previousLayer !== null) {
         // @ts-ignore
         var result = this.layer.W.transpose().dot(sigma);
-        if (result.rows !== previousActivations.rows || result.cols !== previousActivations.cols) {
-          throw new Error("Dimension error 1. (".concat(result.rows, ", ").concat(result.cols, ") | (").concat(previousActivations.rows, ", ").concat(previousActivations.cols, ")"));
+        if (result.rows() !== previousActivations.rows() || result.cols() !== previousActivations.cols()) {
+          throw new Error("Dimension error 1. (".concat(result.rows(), ", ").concat(result.cols(), ") | (").concat(previousActivations.rows(), ", ").concat(previousActivations.cols(), ")"));
         }
-        if (this.layer.gW.rows !== this.layer.W.rows || this.layer.gW.cols !== this.layer.W.cols) {
-          throw new Error("Dimension error 2. (".concat(this.layer.gW.rows, ", ").concat(this.layer.gW.cols, ") | (").concat(this.layer.W.rows, ", ").concat(this.layer.W.cols, ")"));
+        if (this.layer.gW.rows() !== this.layer.W.rows() || this.layer.gW.cols() !== this.layer.W.cols()) {
+          throw new Error("Dimension error 2. (".concat(this.layer.gW.rows(), ", ").concat(this.layer.gW.cols(), ") | (").concat(this.layer.W.rows(), ", ").concat(this.layer.W.cols(), ")"));
         }
-        if (this.layer.gb.rows !== this.layer.b.rows || this.layer.gb.cols !== this.layer.b.cols) {
-          throw new Error("Dimension error 3. (".concat(this.layer.gb.rows, ", ").concat(this.layer.gb.cols, ") | (").concat(this.layer.b.rows, ", ").concat(this.layer.b.cols, ")"));
+        if (this.layer.gb.rows() !== this.layer.b.rows() || this.layer.gb.cols() !== this.layer.b.cols()) {
+          throw new Error("Dimension error 3. (".concat(this.layer.gb.rows(), ", ").concat(this.layer.gb.cols(), ") | (").concat(this.layer.b.rows(), ", ").concat(this.layer.b.cols(), ")"));
         }
-        return result;
+        return result.multiply(this.layer.previousLayer.derivative(this.layer.previousLayer.A));
       }
       return new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
     }
@@ -696,6 +706,17 @@ var LogisticLayer = /*#__PURE__*/function (_AbstractLayer1D) {
     value: function derivative(delta) {
       return delta.logisticBackwardPropagation();
     }
+  }, {
+    key: "loss",
+    value: function loss(correctOutput, predictions) {
+      var result = correctOutput.multiply(predictions.log()).add(correctOutput.minusOne().multiply(predictions.minusOne()));
+      return result.sum().get()[0];
+    }
+  }, {
+    key: "error",
+    value: function error(batchSize) {
+      return -1.0 / batchSize;
+    }
   }]);
 }(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
 
@@ -914,7 +935,7 @@ var TanhLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   }, {
     key: "derivative",
     value: function derivative(sigma) {
-      return this.activation(sigma).pow(2).minusOne();
+      return sigma.tanhDerivative();
     }
   }]);
 }(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
@@ -1020,8 +1041,18 @@ var Network = /*#__PURE__*/function () {
       //let sigma = Y.divide(predictions).multiply(-1).subtract(Y.minusOne().divide(predictions.minusOne()));
       var sigma = predictions.subtract(Y);
       for (var layer = this.layers.length - 1; layer >= 0; layer -= 1) {
-        sigma = this.layers[layer].getBackPropagation().propagate(X, m, regularization, this.layers[layer], this.layers[layer].derivative(sigma));
+        sigma = this.layers[layer].getBackPropagation().propagate(X, m, regularization, this.layers[layer], sigma);
       }
+    }
+  }, {
+    key: "loss",
+    value: function loss(correctOutput, predictions) {
+      return this.layers[this.layers.length - 1].loss(correctOutput, predictions);
+    }
+  }, {
+    key: "error",
+    value: function error(miniBatchSize) {
+      return this.layers[this.layers.length - 1].error(miniBatchSize);
     }
   }, {
     key: "save",
@@ -1618,30 +1649,27 @@ var AbstractTrainer = /*#__PURE__*/function () {
       var numberOfExamples = inputDataset.getNumberOfExamples();
       var accuracy = 0;
       var penalty = 0;
+      var cost = 0;
       this.network.getLayers().forEach(function (layer) {
-        penalty += layer.penalty().get();
+        penalty += layer.penalty().get()[0];
       });
-      console.log("PENALTY", penalty);
       var predictions = this.network.forward(inputDataset.data.transpose());
       var correctOutput = outputDataset.data.transpose();
-
-      /*const error = Y.multiply(predictions.log())
-        .add(Y.minusOne().multiply(predictions.minusOne().log()))
-        .multiply(-1)
-        .sum();
-      const error = correctOutput.multiply(predictions.log()).sum();
-      const cost = (-1 / numberOfExamples) * error + this.regularization / (penalty * (2 * inputDataset.data.cols));
-       for (let col = 0; col < predictions.cols; col += 1) {
-        const index1 = predictions.colMaxCoeffIndex(col);
-        const index2 = correctOutput.colMaxCoeffIndex(col);
-         if (index1 === index2) {
+      var miniBatchSize = correctOutput.cols();
+      var loss = this.network.loss(correctOutput, predictions);
+      var error = this.network.error(miniBatchSize);
+      cost = (error * loss + this.regularization * penalty / (2.0 * miniBatchSize)) / (miniBatchSize * (miniBatchSize / miniBatchSize));
+      for (var i = 0; i < predictions.cols(); i += 1) {
+        var p = predictions.col(i).maxCoeff();
+        var o = correctOutput.col(i).maxCoeff();
+        if (p.get()[0] === o.get()[0]) {
           accuracy++;
         }
       }
-       return {
-        cost,
-        accuracy: (accuracy / numberOfExamples) * 100,
-      };*/
+      return {
+        cost: cost,
+        accuracy: (accuracy - 1.0) / numberOfExamples * 100.0
+      };
     }
   }]);
 }();
