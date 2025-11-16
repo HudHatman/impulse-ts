@@ -176,7 +176,7 @@ var AbstractLayer1D = /*#__PURE__*/function (_AbstractLayer) {
   }, {
     key: "forward",
     value: function forward(input) {
-      //this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols));
+      this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols()));
       this.A = this.activation(this.Z);
       return this.A;
     }
