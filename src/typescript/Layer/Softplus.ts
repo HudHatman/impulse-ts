@@ -1,9 +1,9 @@
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { LayerType } from "../types";
 import { AbstractLayer1D } from "./AbstractLayer1D";
 
 class SoftplusLayer extends AbstractLayer1D {
-  activation(m: Matrix): Matrix {
+  activation(m: CalcMatrix2D): CalcMatrix2D {
     return m.exp().add(1).log();
   }
 
@@ -11,7 +11,7 @@ class SoftplusLayer extends AbstractLayer1D {
     return LayerType.softplus;
   }
 
-  derivative(delta: Matrix): Matrix {
+  derivative(delta: CalcMatrix2D): CalcMatrix2D {
     return delta.multiply(-1).exp().add(1).fraction(1);
   }
 }

@@ -1,4 +1,4 @@
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { Dimension, Layers } from "../types";
 import { AbstractBackPropagation } from "./Backpropagation/AbstractBackpropagation";
 
@@ -66,11 +66,11 @@ abstract class AbstractLayer {
 
   abstract getSize(): Dimension | number;
 
-  abstract activation(value: Matrix): Matrix;
+  abstract activation(value: CalcMatrix2D): CalcMatrix2D;
 
   abstract getType(): string;
 
-  abstract derivative(delta: Matrix): Matrix;
+  abstract derivative(delta: CalcMatrix2D): CalcMatrix2D;
 
   abstract penalty(): number;
 }

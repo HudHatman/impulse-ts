@@ -21,6 +21,7 @@
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
+    "build": "npm run build-dev && npm run build-prod",
     "build-dev": "webpack --config ./configs/dev.js",
     "build-prod": "webpack --config ./configs/prod.js",
     "prettier-write": "prettier --write \"src/typescript/**/*.ts\"",
@@ -31,8 +32,8 @@
   "license": "Copyright Michał Baniowski",
   "dependencies": {
     "csvtojson": "^2.0.10",
-    "impulse-dataset-ts": "^0.0.9",
-    "impulse-math-ts": "^0.0.6"
+    "impulse-dataset-ts": "file://../impulse-dataset-ts/",
+    "impulse-math-device-ts": "file://../impulse-math-device-ts/"
   },
-  "main": "./dist/impulse-ts.dev.js"
+  "main": "./dist/impulse-ts.js"
 }

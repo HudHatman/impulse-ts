@@ -3,7 +3,7 @@ import { Layers } from "../types";
 import { Network } from "../Network";
 import * as fs from "fs";
 import { LogisticLayer, ReluLayer, SoftmaxLayer, SoftplusLayer, TanhLayer } from "../Layer/";
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { JSONLayerData } from "./types";
 
 class NetworkBuilder1D extends AbstractNetworkBuilder {
@@ -46,12 +46,12 @@ class NetworkBuilder1D extends AbstractNetworkBuilder {
         const network = builder.getNetwork();
 
         network.getLayers().forEach((layer, i) => {
-          layer.W = new Matrix(
+          layer.W = new CalcMatrix2D(
             json["layers"][i]["weights"]["W"].length,
             json["layers"][i]["weights"]["W"][0].length,
             json["layers"][i]["weights"]["W"]
           );
-          layer.b = new Matrix(
+          layer.b = new CalcMatrix2D(
             json["layers"][i]["weights"]["b"].length,
             json["layers"][i]["weights"]["b"][0].length,
             json["layers"][i]["weights"]["b"]

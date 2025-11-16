@@ -1,6 +1,6 @@
 import { NetworkRNN } from "../Network";
 import { DatasetVocabulary } from "impulse-dataset-ts/src/typescript/Dataset/DatasetVocabulary";
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { OptimizerRNN } from "./Optimizer/OptimizerRNN";
 
 export class RNNTrainer {
@@ -22,7 +22,7 @@ export class RNNTrainer {
     //const ys = {};
     this.optimizer
       .setT(-1)
-      .setHS(new Matrix(this.network.getDimensions()[0], this.network.getDimensions()[0]).setZeros());
+      .setHS(new CalcMatrix2D(this.network.getDimensions()[0], this.network.getDimensions()[0]).setZeros());
 
     /*let mWxh = new Matrix(this.network.getDimensions()[0], this.network.getDimensions()[1]).setZeros();
     let mWhh = new Matrix(this.network.getDimensions()[0], this.network.getDimensions()[0]).setZeros();
@@ -48,7 +48,7 @@ export class RNNTrainer {
       console.log(`Loss ${_loss} | Iteration: ${iteration}`);
 
       for (let i = X.length - 1; i >= 0; i -= 1) {
-        const dy = Matrix.from(this.optimizer.ys[i].data);
+        const dy = CalcMatrix2D.from(this.optimizer.ys[i].data);
         for (let row = 0; row < dy.rows; row += 1) {
           dy.data[row][x[i].transpose().rowMaxCoeffIndex(row)] -= 1;
         }

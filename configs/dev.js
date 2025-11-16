@@ -16,8 +16,8 @@ module.exports = {
     }
   },
   externals: {
-    'gpu.js': 'gpu.js',
-    'csvtojson': 'csvtojson'
+    'csvtojson': 'csvtojson',
+    "impulse-math-device-ts": "impulse-math-device-ts",
   },
   module: {
     rules: [

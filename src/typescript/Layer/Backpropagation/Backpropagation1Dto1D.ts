@@ -1,9 +1,9 @@
 import { AbstractBackPropagation } from "./AbstractBackpropagation";
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { Layers } from "../../types";
 
 export class Backpropagation1Dto1D extends AbstractBackPropagation {
-  propagate(input: Matrix, numberOfExamples: number, regularization: number, layer: Layers, sigma: Matrix): Matrix {
+  propagate(input: CalcMatrix2D, numberOfExamples: number, regularization: number, layer: Layers, sigma: CalcMatrix2D): CalcMatrix2D {
     const previousActivations = this.previousLayer !== null ? this.previousLayer.A : input;
 
     const delta = sigma.dot(previousActivations.transpose());
@@ -30,6 +30,6 @@ export class Backpropagation1Dto1D extends AbstractBackPropagation {
       }
       return result;
     }
-    return new Matrix();
+    return new CalcMatrix2D();
   }
 }

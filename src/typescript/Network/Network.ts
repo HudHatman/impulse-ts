@@ -1,5 +1,5 @@
 import { Dimension, Layers } from "../types";
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import * as fs from "fs";
 
 class Network {
@@ -22,7 +22,7 @@ class Network {
     return this.layers;
   }
 
-  forward(input: Matrix): Matrix {
+  forward(input: CalcMatrix2D): CalcMatrix2D {
     let output = input;
 
     this.layers.forEach((layer: Layers) => {
@@ -32,8 +32,8 @@ class Network {
     return output;
   }
 
-  backward(X: Matrix, Y: Matrix, regularization: number): void {
-    const m = X.cols;
+  backward(X: CalcMatrix2D, Y: CalcMatrix2D, regularization: number): void {
+    const m = X.cols();
     const predictions = this.forward(X);
     //let sigma = Y.divide(predictions).multiply(-1).subtract(Y.minusOne().divide(predictions.minusOne()));
     let sigma = predictions.subtract(Y);
@@ -56,8 +56,8 @@ class Network {
         type: layer.getType(),
         size: layer.getSize(),
         weights: {
-          W: layer.W.data,
-          b: layer.b.data,
+          W: layer.W.get(),
+          b: layer.b.get(),
         },
       });
     });

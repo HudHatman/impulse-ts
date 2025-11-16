@@ -1,73 +1,73 @@
 import { AbstractLayer } from "./AbstractLayer";
 import { Layers } from "../types";
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 
 abstract class AbstractLayer1D extends AbstractLayer {
   protected depth = 1;
-  public W: Matrix;
-  public b: Matrix;
-  public A: Matrix;
-  public Z: Matrix;
-  public gW: Matrix;
-  public gb: Matrix;
-  public vW: Matrix;
-  public sW: Matrix;
-  public vb: Matrix;
-  public sb: Matrix;
-  public dW: Matrix;
-  public db: Matrix;
-  public dZ: Matrix;
+  public W: CalcMatrix2D;
+  public b: CalcMatrix2D;
+  public A: CalcMatrix2D;
+  public Z: CalcMatrix2D;
+  public gW: CalcMatrix2D;
+  public gb: CalcMatrix2D;
+  public vW: CalcMatrix2D;
+  public sW: CalcMatrix2D;
+  public vb: CalcMatrix2D;
+  public sb: CalcMatrix2D;
+  public dW: CalcMatrix2D;
+  public db: CalcMatrix2D;
+  public dZ: CalcMatrix2D;
 
   constructor() {
     super();
-    this.W = new Matrix();
-    this.b = new Matrix();
-    this.A = new Matrix();
-    this.Z = new Matrix();
-    this.gW = new Matrix();
-    this.gb = new Matrix();
-    this.vW = new Matrix();
-    this.vb = new Matrix();
-    this.sW = new Matrix();
-    this.sb = new Matrix();
-    this.dW = new Matrix();
-    this.db = new Matrix();
+    this.W = new CalcMatrix2D();
+    this.b = new CalcMatrix2D();
+    this.A = new CalcMatrix2D();
+    this.Z = new CalcMatrix2D();
+    this.gW = new CalcMatrix2D();
+    this.gb = new CalcMatrix2D();
+    this.vW = new CalcMatrix2D();
+    this.vb = new CalcMatrix2D();
+    this.sW = new CalcMatrix2D();
+    this.sb = new CalcMatrix2D();
+    this.dW = new CalcMatrix2D();
+    this.db = new CalcMatrix2D();
   }
 
   configure(): void {
     this.W.resize(this.getHeight(), this.getWidth());
-    this.W = this.W.setRandom(this.previousLayer ? (this.previousLayer.getHeight() as number) : this.getHeight());
+    this.W.setRandom(this.previousLayer ? (this.previousLayer.getHeight() as number) : this.getHeight());
 
     this.b.resize(this.getHeight(), 1);
-    this.b = this.b.setRandom(this.previousLayer ? (this.previousLayer.getHeight() as number) : this.getHeight());
+    this.b.setRandom(this.previousLayer ? (this.previousLayer.getHeight() as number) : this.getHeight());
 
     this.gW.resize(this.getHeight(), this.getWidth());
-    this.gW = this.gW.setZeros();
+    this.gW.setZeros();
 
     this.gb.resize(this.getHeight(), 1);
-    this.gb = this.gb.setZeros();
+    this.gb.setZeros();
 
     this.sW.resize(this.getHeight(), this.getWidth());
-    this.sW = this.sW.setZeros();
+    this.sW.setZeros();
 
     this.sb.resize(this.getHeight(), 1);
-    this.sb = this.sb.setZeros();
+    this.sb.setZeros();
 
     this.vW.resize(this.getHeight(), this.getWidth());
-    this.vW = this.vW.setZeros();
+    this.vW.setZeros();
 
     this.vb.resize(this.getHeight(), 1);
-    this.vb = this.vb.setZeros();
+    this.vb.setZeros();
 
     this.dW.resize(this.getHeight(), this.getWidth());
-    this.dW = this.dW.setZeros();
+    this.dW.setZeros();
 
     this.db.resize(this.getHeight(), 1);
-    this.db = this.db.setZeros();
+    this.db.setZeros();
   }
 
-  forward(input: Matrix): Matrix {
-    this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols));
+  forward(input: CalcMatrix2D): CalcMatrix2D {
+    //this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols));
     this.A = this.activation(this.Z);
     return this.A;
   }
@@ -115,7 +115,7 @@ abstract class AbstractLayer1D extends AbstractLayer {
   }
 
   penalty(): number {
-    return this.W.pow(2).sum();
+    return 0;//this.W.pow(2).sum();
   }
 }
 

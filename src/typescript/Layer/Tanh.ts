@@ -1,9 +1,9 @@
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { LayerType } from "../types";
 import { AbstractLayer1D } from "./AbstractLayer1D";
 
 class TanhLayer extends AbstractLayer1D {
-  activation(m: Matrix): Matrix {
+  activation(m: CalcMatrix2D): CalcMatrix2D {
     return m.tanh();
   }
 
@@ -11,7 +11,7 @@ class TanhLayer extends AbstractLayer1D {
     return LayerType.tanh;
   }
 
-  derivative(sigma: Matrix): Matrix {
+  derivative(sigma: CalcMatrix2D): CalcMatrix2D {
     return this.activation(sigma).pow(2).minusOne();
   }
 }

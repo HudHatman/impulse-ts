@@ -1,9 +1,9 @@
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { LayerType } from "../types";
 import { AbstractLayer1D } from "./AbstractLayer1D";
 
 class LogisticLayer extends AbstractLayer1D {
-  activation(m: Matrix): Matrix {
+  activation(m: CalcMatrix2D): CalcMatrix2D {
     return m.multiply(-1).exp().add(1).fraction(1);
   }
 
@@ -11,7 +11,7 @@ class LogisticLayer extends AbstractLayer1D {
     return LayerType.logistic;
   }
 
-  derivative(delta: Matrix): Matrix {
+  derivative(delta: CalcMatrix2D): CalcMatrix2D {
     return delta.multiply(this.activation(delta).multiply(this.activation(delta.minusOne())));
   }
 }

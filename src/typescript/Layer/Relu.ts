@@ -1,10 +1,10 @@
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { LayerType } from "../types";
 import { AbstractLayer1D } from "./AbstractLayer1D";
 import { getComputation } from "impulse-math-ts";
 
 class ReluLayer extends AbstractLayer1D {
-  activation(m: Matrix): Matrix {
+  activation(m: CalcMatrix2D): CalcMatrix2D {
     return m.setMin(0.0);
   }
 
@@ -12,8 +12,8 @@ class ReluLayer extends AbstractLayer1D {
     return LayerType.relu;
   }
 
-  derivative(delta: Matrix) {
-    return getComputation().execute("reluBackpropagation", delta, this.A) as Matrix;
+  derivative(delta: CalcMatrix2D) {
+    return getComputation().execute("reluBackpropagation", delta, this.A) as CalcMatrix2D;
   }
 }
 

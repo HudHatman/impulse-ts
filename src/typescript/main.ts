@@ -1,15 +1,15 @@
-import { NetworkBuilder1D, NetworkBuilder3D } from "./NetworkBuilder";
+import { NetworkBuilder1D } from "./NetworkBuilder";
 import {
   SoftmaxLayer,
   LogisticLayer,
   ReluLayer,
   SoftplusLayer,
   TanhLayer,
-  ConvLayer,
-  FullyConnectedLayer,
-  MaxPoolLayer,
-  RecurrentLayer,
-  LSTMLayer,
+  //ConvLayer,
+  //FullyConnectedLayer,
+  //MaxPoolLayer,
+  //RecurrentLayer,
+  //LSTMLayer,
 } from "./Layer";
 import { Matrix } from "impulse-math-ts";
 import {
@@ -22,7 +22,7 @@ import {
 import { MiniBatchTrainer, Trainer as TrainerTrainer, RNNTrainer } from "./Trainer";
 import { NetworkRNN, NetworkLSTM } from "./Network";
 
-const NetworkBuilder = { NetworkBuilder1D, NetworkBuilder3D };
+const NetworkBuilder = { NetworkBuilder1D };
 const Math = {
   Matrix,
 };
@@ -32,11 +32,11 @@ const Layer = {
   ReluLayer,
   SoftplusLayer,
   TanhLayer,
-  ConvLayer,
-  MaxPoolLayer,
-  FullyConnectedLayer,
-  RecurrentLayer,
-  LSTMLayer,
+ // ConvLayer,
+  //MaxPoolLayer,
+  //FullyConnectedLayer,
+  //RecurrentLayer,
+  //LSTMLayer,
 };
 const Optimizer = {
   OptimizerAdam,

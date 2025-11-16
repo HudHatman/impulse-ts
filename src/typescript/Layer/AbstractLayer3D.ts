@@ -1,36 +1,36 @@
 import { AbstractLayer } from "./AbstractLayer";
 import { Dimension, Layers } from "../types";
-import { Matrix } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 
 abstract class AbstractLayer3D extends AbstractLayer {
-  public W: Matrix;
-  public b: Matrix;
-  public A: Matrix;
-  public Z: Matrix;
-  public gW: Matrix;
-  public gb: Matrix;
-  public vW: Matrix;
-  public sW: Matrix;
-  public vb: Matrix;
-  public sb: Matrix;
-  public dW: Matrix;
-  public db: Matrix;
-  public dZ: Matrix;
+  public W: CalcMatrix2D;
+  public b: CalcMatrix2D;
+  public A: CalcMatrix2D;
+  public Z: CalcMatrix2D;
+  public gW: CalcMatrix2D;
+  public gb: CalcMatrix2D;
+  public vW: CalcMatrix2D;
+  public sW: CalcMatrix2D;
+  public vb: CalcMatrix2D;
+  public sb: CalcMatrix2D;
+  public dW: CalcMatrix2D;
+  public db: CalcMatrix2D;
+  public dZ: CalcMatrix2D;
 
   constructor() {
     super();
-    this.W = new Matrix();
-    this.b = new Matrix();
-    this.A = new Matrix();
-    this.Z = new Matrix();
-    this.gW = new Matrix();
-    this.gb = new Matrix();
-    this.vW = new Matrix();
-    this.vb = new Matrix();
-    this.sW = new Matrix();
-    this.sb = new Matrix();
-    this.dW = new Matrix();
-    this.db = new Matrix();
+    this.W = new CalcMatrix2D();
+    this.b = new CalcMatrix2D();
+    this.A = new CalcMatrix2D();
+    this.Z = new CalcMatrix2D();
+    this.gW = new CalcMatrix2D();
+    this.gb = new CalcMatrix2D();
+    this.vW = new CalcMatrix2D();
+    this.vb = new CalcMatrix2D();
+    this.sW = new CalcMatrix2D();
+    this.sb = new CalcMatrix2D();
+    this.dW = new CalcMatrix2D();
+    this.db = new CalcMatrix2D();
   }
 
   configure(): void {
@@ -73,9 +73,9 @@ abstract class AbstractLayer3D extends AbstractLayer {
 
   abstract getFilterSize(): number;
 
-  abstract forward(input: Matrix): Matrix;
+  abstract forward(input: CalcMatrix2D): CalcMatrix2D;
 
-  abstract derivative(delta: Matrix): Matrix;
+  abstract derivative(delta: CalcMatrix2D): CalcMatrix2D;
 
   penalty(): number {
     return this.W.pow(2).sum();

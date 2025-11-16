@@ -1,5 +1,5 @@
 import { Layers } from "../../types";
-import { Matrix } from "../../Math/Matrix";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 
 export abstract class AbstractBackPropagation {
   protected layer: Layers | null = null;
@@ -11,10 +11,10 @@ export abstract class AbstractBackPropagation {
   }
 
   abstract propagate(
-    input: Matrix,
+    input: CalcMatrix2D,
     numberOfExamples: number,
     regularization: number,
     layer: Layers,
-    sigma: Matrix
-  ): Matrix;
+    sigma: CalcMatrix2D
+  ): CalcMatrix2D;
 }
