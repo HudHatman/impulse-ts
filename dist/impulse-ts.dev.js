@@ -176,7 +176,7 @@ var AbstractLayer1D = /*#__PURE__*/function (_AbstractLayer) {
   }, {
     key: "forward",
     value: function forward(input) {
-      this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols()));
+      this.Z = this.W.dot(input).add(this.b);
       this.A = this.activation(this.Z);
       return this.A;
     }
@@ -230,7 +230,7 @@ var AbstractLayer1D = /*#__PURE__*/function (_AbstractLayer) {
   }, {
     key: "penalty",
     value: function penalty() {
-      return 0; //this.W.pow(2).sum();
+      return this.W.pow(2).sum();
     }
   }]);
 }(_AbstractLayer__WEBPACK_IMPORTED_MODULE_0__.AbstractLayer);
@@ -684,7 +684,7 @@ var LogisticLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   return _createClass(LogisticLayer, [{
     key: "activation",
     value: function activation(m) {
-      return m.multiply(-1).exp().add(1).fraction(1);
+      return m.logisticForwardPropagation();
     }
   }, {
     key: "getType",
@@ -694,7 +694,7 @@ var LogisticLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   }, {
     key: "derivative",
     value: function derivative(delta) {
-      return delta.multiply(this.activation(delta).multiply(this.activation(delta.minusOne())));
+      return delta.logisticBackwardPropagation();
     }
   }]);
 }(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
@@ -1554,7 +1554,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AbstractTrainer: () => (/* binding */ AbstractTrainer)
 /* harmony export */ });
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _readOnlyError(r) { throw new TypeError('"' + r + '" is read-only'); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -1620,28 +1619,29 @@ var AbstractTrainer = /*#__PURE__*/function () {
       var accuracy = 0;
       var penalty = 0;
       this.network.getLayers().forEach(function (layer) {
-        penalty += layer.penalty();
+        penalty += layer.penalty().get();
       });
+      console.log("PENALTY", penalty);
       var predictions = this.network.forward(inputDataset.data.transpose());
       var correctOutput = outputDataset.data.transpose();
 
       /*const error = Y.multiply(predictions.log())
         .add(Y.minusOne().multiply(predictions.minusOne().log()))
         .multiply(-1)
-        .sum();*/
-      var error = correctOutput.multiply(predictions.log()).sum();
-      var cost = -1 / numberOfExamples * error + this.regularization / (penalty * (2 * inputDataset.data.cols));
-      for (var col = 0; col < predictions.cols; col += 1) {
-        var index1 = predictions.colMaxCoeffIndex(col);
-        var index2 = correctOutput.colMaxCoeffIndex(col);
-        if (index1 === index2) {
+        .sum();
+      const error = correctOutput.multiply(predictions.log()).sum();
+      const cost = (-1 / numberOfExamples) * error + this.regularization / (penalty * (2 * inputDataset.data.cols));
+       for (let col = 0; col < predictions.cols; col += 1) {
+        const index1 = predictions.colMaxCoeffIndex(col);
+        const index2 = correctOutput.colMaxCoeffIndex(col);
+         if (index1 === index2) {
           accuracy++;
         }
       }
-      return {
-        cost: cost,
-        accuracy: accuracy / numberOfExamples * 100
-      };
+       return {
+        cost,
+        accuracy: (accuracy / numberOfExamples) * 100,
+      };*/
     }
   }]);
 }();

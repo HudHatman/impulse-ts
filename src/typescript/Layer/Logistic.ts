@@ -4,7 +4,7 @@ import { AbstractLayer1D } from "./AbstractLayer1D";
 
 class LogisticLayer extends AbstractLayer1D {
   activation(m: CalcMatrix2D): CalcMatrix2D {
-    return m.multiply(-1).exp().add(1).fraction(1);
+    return m.logisticForwardPropagation();
   }
 
   getType(): LayerType {
@@ -12,7 +12,7 @@ class LogisticLayer extends AbstractLayer1D {
   }
 
   derivative(delta: CalcMatrix2D): CalcMatrix2D {
-    return delta.multiply(this.activation(delta).multiply(this.activation(delta.minusOne())));
+    return delta.logisticBackwardPropagation();
   }
 }
 

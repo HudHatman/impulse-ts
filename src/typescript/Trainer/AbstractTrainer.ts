@@ -65,15 +65,17 @@ export abstract class AbstractTrainer {
     let penalty = 0;
 
     this.network.getLayers().forEach((layer) => {
-      penalty += layer.penalty();
+      penalty += layer.penalty().get();
     });
+
+    console.log("PENALTY", penalty)
     const predictions = this.network.forward(inputDataset.data.transpose());
     const correctOutput = outputDataset.data.transpose();
 
     /*const error = Y.multiply(predictions.log())
       .add(Y.minusOne().multiply(predictions.minusOne().log()))
       .multiply(-1)
-      .sum();*/
+      .sum();
     const error = correctOutput.multiply(predictions.log()).sum();
     const cost = (-1 / numberOfExamples) * error + this.regularization / (penalty * (2 * inputDataset.data.cols));
 
@@ -89,6 +91,6 @@ export abstract class AbstractTrainer {
     return {
       cost,
       accuracy: (accuracy / numberOfExamples) * 100,
-    };
+    };*/
   }
 }

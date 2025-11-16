@@ -1,6 +1,6 @@
 import { AbstractLayer } from "./AbstractLayer";
 import { Layers } from "../types";
-import { CalcMatrix2D } from "impulse-math-device-ts";
+import { CalcMatrix2D, CalcScalar } from "impulse-math-device-ts";
 
 abstract class AbstractLayer1D extends AbstractLayer {
   protected depth = 1;
@@ -67,7 +67,7 @@ abstract class AbstractLayer1D extends AbstractLayer {
   }
 
   forward(input: CalcMatrix2D): CalcMatrix2D {
-    this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols()));
+    this.Z = this.W.dot(input).add(this.b);
     this.A = this.activation(this.Z);
     return this.A;
   }
@@ -114,8 +114,8 @@ abstract class AbstractLayer1D extends AbstractLayer {
     return 1;
   }
 
-  penalty(): number {
-    return 0;//this.W.pow(2).sum();
+  penalty(): CalcScalar {
+    return this.W.pow(2).sum();
   }
 }
 
