@@ -15,7 +15,7 @@ class LogisticLayer extends AbstractLayer1D {
     return delta.logisticBackwardPropagation();
   }
     public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
-        const result = (correctOutput.multiply(predictions.log())).add((correctOutput.minusOne()).multiply(predictions.minusOne()));
+        const result = (correctOutput.multiply(predictions.log())).add((correctOutput.minusOne()).multiply(predictions.logMinusOne()));
         return result.sum().get()[0];
     }
 

@@ -709,7 +709,7 @@ var LogisticLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   }, {
     key: "loss",
     value: function loss(correctOutput, predictions) {
-      var result = correctOutput.multiply(predictions.log()).add(correctOutput.minusOne().multiply(predictions.minusOne()));
+      var result = correctOutput.multiply(predictions.log()).add(correctOutput.minusOne().multiply(predictions.logMinusOne()));
       return result.sum().get()[0];
     }
   }, {
@@ -1038,7 +1038,6 @@ var Network = /*#__PURE__*/function () {
     value: function backward(X, Y, regularization) {
       var m = X.cols();
       var predictions = this.forward(X);
-      //let sigma = Y.divide(predictions).multiply(-1).subtract(Y.minusOne().divide(predictions.minusOne()));
       var sigma = predictions.subtract(Y);
       for (var layer = this.layers.length - 1; layer >= 0; layer -= 1) {
         sigma = this.layers[layer].getBackPropagation().propagate(X, m, regularization, this.layers[layer], sigma);
@@ -1894,9 +1893,9 @@ var OptimizerAdagrad = /*#__PURE__*/function (_AbstractOptimizer) {
     key: "adagrad",
     value: function adagrad(layer, learningRate) {
       layer.dW = layer.dW.add(layer.gW.pow(2));
-      layer.W = layer.W.subtract(layer.gW.multiply(learningRate).divide(layer.dW.sqrt().add(1e-8)).multiply(layer.gW));
+      layer.W = layer.W.subtract(layer.gW.multiply(learningRate).divide(layer.dW.sqrt()));
       layer.db = layer.db.add(layer.gb.pow(2));
-      layer.b = layer.b.subtract(layer.db.multiply(learningRate).divide(layer.db.sqrt().add(1e-8)).multiply(layer.gb));
+      layer.b = layer.b.subtract(layer.gb.multiply(learningRate).divide(layer.db.sqrt()));
     }
   }]);
 }(_AbstractOptimizer__WEBPACK_IMPORTED_MODULE_0__.AbstractOptimizer);
