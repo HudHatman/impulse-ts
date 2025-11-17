@@ -1,126 +1,104 @@
-import { Matrix, im2col, getComputation } from "impulse-math-ts";
+import { CalcMatrix2D } from "impulse-math-device-ts";
 import { LayerType } from "../types";
 import { AbstractLayer3D } from "./AbstractLayer3D";
 
+/**
+ * Warstwa konwolucyjna (Convolutional Layer).
+ * Przetwarza dane wejściowe 3D (wysokość, szerokość, głębokość/kanały)
+ * za pomocą zestawu filtrów, aby wyodrębnić cechy takie jak krawędzie, tekstury itp.
+ */
 export class ConvLayer extends AbstractLayer3D {
-  protected numFilters = 32;
-  protected filterSize = 4;
+  protected numFilters = 8;
+  protected filterSize = 3;
   protected padding = 1;
   protected stride = 1;
 
+  // Pamięć podręczna dla wstecznej propagacji
+  private cache: {
+    inputCols?: CalcMatrix2D;
+    inputShape?: number[];
+  } = {};
+
+  public penalty(): number {
+    return this.W.pow(2).sum().get()[0];
+  }
+
   configure(): void {
-    this.W.resize(this.numFilters, this.filterSize * this.filterSize * this.depth);
-    this.W = this.W.setRandom(this.getOutputWidth() * this.getOutputHeight() * this.getOutputDepth());
+    const inputDepth = this.getDepth();
+    const filterWeightCount = this.filterSize * this.filterSize * inputDepth;
 
-    this.b.resize(this.numFilters, 1);
-    this.b = this.b.setRandom(this.getOutputWidth() * this.getOutputHeight() * this.getOutputDepth());
+    this.W = new CalcMatrix2D(this.numFilters, filterWeightCount).setRandom(filterWeightCount);
+    this.b = new CalcMatrix2D(this.numFilters, 1).setZeros();
 
-    this.gW.resize(this.numFilters, this.filterSize * this.filterSize * this.depth);
-    this.gW = this.gW.setZeros();
-
-    this.gb.resize(this.numFilters, 1);
-    this.gb = this.gb.setZeros();
-
-    this.sW.resize(this.numFilters, this.filterSize * this.filterSize * this.depth);
-    this.sW = this.sW.setZeros();
-
-    this.sb.resize(this.numFilters, 1);
-    this.sb = this.sb.setZeros();
-
-    this.vW.resize(this.numFilters, this.filterSize * this.filterSize * this.depth);
-    this.vW = this.vW.setZeros();
-
-    this.vb.resize(this.numFilters, 1);
-    this.vb = this.vb.setZeros();
+    this.gW = new CalcMatrix2D(this.numFilters, filterWeightCount).setZeros();
+    this.gb = new CalcMatrix2D(this.numFilters, 1).setZeros();
   }
 
   getOutputHeight(): number {
-    return (this.width - this.filterSize + 2 * this.padding) / this.stride + 1;
+    return Math.floor((this.getHeight() - this.filterSize + 2 * this.padding) / this.stride + 1);
   }
 
   getOutputWidth(): number {
-    return (this.height - this.filterSize + 2 * this.padding) / this.stride + 1;
+    return Math.floor((this.getWidth() - this.filterSize + 2 * this.padding) / this.stride + 1);
   }
 
   getOutputDepth(): number {
     return this.numFilters;
   }
 
-  setFilterSize(size: number): ConvLayer {
-    this.filterSize = size;
-    return this;
+  private im2col(input: CalcMatrix2D, batchSize: number): CalcMatrix2D {
+    const [inputHeight, inputWidth, inputDepth] = [this.getHeight(), this.getWidth(), this.getDepth()];
+    const outputHeight = this.getOutputHeight();
+    const outputWidth = this.getOutputWidth();
+    const filterArea = this.filterSize * this.filterSize;
+
+    const result = new CalcMatrix2D(filterArea * inputDepth, outputHeight * outputWidth * batchSize).allocate().calcSync((calc) => {
+      return calc.img2col(this.filterSize, this.stride, this.padding)
+    });
+    return result;
   }
 
-  getFilterSize(): number {
-    return this.filterSize;
-  }
+  /**
+   * Przetwarza partię danych wejściowych.
+   * @param input Macierz o wymiarach (wysokość * szerokość * głębokość, liczba_przykładów)
+   */
+  forward(input: CalcMatrix2D): CalcMatrix2D {
+    const batchSize = input.cols();
+    const outputHeight = this.getOutputHeight();
+    const outputWidth = this.getOutputWidth();
 
-  setNumFilters(numFilters: number): ConvLayer {
-    this.numFilters = numFilters;
-    return this;
-  }
+    // 1. Przekształć wejście za pomocą im2col
+    const inputCols = this.im2col(input, batchSize);
+    this.cache = { inputCols, inputShape: [this.getHeight(), this.getWidth(), this.getDepth()] };
 
-  getNumFilters(): number {
-    return this.numFilters;
-  }
+    // 2. Wykonaj operację konwolucji jako jedno mnożenie macierzy
+    const result = this.W.dot(inputCols).add(this.b);
 
-  setPadding(padding: number): ConvLayer {
-    this.padding = padding;
-    return this;
-  }
+    // 3. Przekształć wynik do odpowiedniego formatu wyjściowego
+    const reshapedResult = result.reshape(this.numFilters, outputHeight * outputWidth * batchSize);
 
-  getPadding(): number {
-    return this.padding;
-  }
-
-  setStride(stride: number): ConvLayer {
-    this.stride = stride;
-    return this;
-  }
-
-  getStride(): number {
-    return this.stride;
-  }
-
-  forward(input: Matrix): Matrix {
-    const result = new Matrix(
-      this.getOutputWidth() * this.getOutputHeight() * this.getOutputDepth(),
-      input.cols
-    ).setZeros();
-
-    for (let i = 0; i < input.cols; i += 1) {
-      const conv = im2col(
-        input.col(i),
-        this.depth,
-        this.height,
-        this.width,
-        this.filterSize,
-        this.filterSize,
-        this.padding,
-        this.padding,
-        this.stride,
-        this.stride
-      );
-
-      const tmp = this.W.dot(conv.transpose()).add(this.b.replicate(1, conv.rows));
-      result.setCol(i, tmp.rollToColMatrix());
-    }
-
-    this.Z = result;
+    // 4. Zastosuj funkcję aktywacji
+    this.Z = reshapedResult;
     this.A = this.activation(this.Z);
 
     return this.A;
   }
 
-  activation(m: Matrix): Matrix {
-    return m.setMin(0);
+  activation(m: CalcMatrix2D): CalcMatrix2D {
+    return m.relu(); // ReLU jest standardem dla warstw konwolucyjnych
+  }
+
+  derivative(delta: CalcMatrix2D): CalcMatrix2D {
+    return delta.reluDerivative(this.A);
   }
 
   getType(): LayerType {
     return LayerType.conv;
   }
 
-  derivative(delta: Matrix) {
-    return getComputation().execute("reluBackpropagation", delta, this.A) as Matrix;
-  }
+  // --- Settery dla parametrów warstwy ---
+  setFilterSize(size: number): this { this.filterSize = size; return this; }
+  setNumFilters(num: number): this { this.numFilters = num; return this; }
+  setPadding(pad: number): this { this.padding = pad; return this; }
+  setStride(stride: number): this { this.stride = stride; return this; }
 }

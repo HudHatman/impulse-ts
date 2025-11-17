@@ -21,6 +21,7 @@ export enum LayerType {
   fullyconnected = "fullyconnected",
   purelin = "purelin",
   rnnlayer = "rnnlayer",
+  lstm = "lstm"
 }
 
 export type Layers =

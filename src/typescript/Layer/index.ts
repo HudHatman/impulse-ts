@@ -4,12 +4,12 @@ import { LogisticLayer } from "./Logistic";
 import { TanhLayer } from "./Tanh";
 import { ReluLayer } from "./Relu";
 import { SoftplusLayer } from "./Softplus";
-//import { ConvLayer } from "./Conv";
-//import { FullyConnectedLayer } from "./FullyConnected";
-//import { MaxPoolLayer } from "./MaxPool";
-//import { RecurrentLayer } from "./Recurrent";
-//import { PurelinLayer } from "./Purelin";
-//import { LSTMLayer } from "./LSTM";
+import { ConvLayer } from "./Conv";
+import { FullyConnectedLayer } from "./FullyConnected";
+import { MaxPoolLayer } from "./MaxPool";
+import { RecurrentLayer } from "./Recurrent";
+import { PurelinLayer } from "./Purelin";
+import { LSTMLayer } from "./LSTM";
 
 export {
   AbstractLayer,
@@ -18,10 +18,10 @@ export {
   TanhLayer,
   ReluLayer,
   SoftplusLayer,
-  //ConvLayer,
-  //FullyConnectedLayer,
-  //MaxPoolLayer,
-  //RecurrentLayer,
-  //PurelinLayer,
-  //LSTMLayer,
+  ConvLayer,
+  FullyConnectedLayer,
+  MaxPoolLayer,
+  RecurrentLayer,
+  PurelinLayer,
+  LSTMLayer,
 };

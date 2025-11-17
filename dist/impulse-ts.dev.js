@@ -273,6 +273,106 @@ var AbstractLayer1D = /*#__PURE__*/function (_AbstractLayer) {
 
 /***/ }),
 
+/***/ "./src/typescript/Layer/AbstractLayer3D.ts":
+/*!*************************************************!*\
+  !*** ./src/typescript/Layer/AbstractLayer3D.ts ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AbstractLayer3D: () => (/* binding */ AbstractLayer3D)
+/* harmony export */ });
+/* harmony import */ var _AbstractLayer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractLayer */ "./src/typescript/Layer/AbstractLayer.ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _superPropGet(t, o, e, r) { var p = _get(_getPrototypeOf(1 & r ? t.prototype : t), o, e); return 2 & r && "function" == typeof p ? function (t) { return p.apply(e, t); } : p; }
+function _get() { return _get = "undefined" != typeof Reflect && Reflect.get ? Reflect.get.bind() : function (e, t, r) { var p = _superPropBase(e, t); if (p) { var n = Object.getOwnPropertyDescriptor(p, t); return n.get ? n.get.call(arguments.length < 3 ? e : r) : n.value; } }, _get.apply(null, arguments); }
+function _superPropBase(t, o) { for (; !{}.hasOwnProperty.call(t, o) && null !== (t = _getPrototypeOf(t));); return t; }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+var AbstractLayer3D = /*#__PURE__*/function (_AbstractLayer) {
+  function AbstractLayer3D() {
+    var _this;
+    _classCallCheck(this, AbstractLayer3D);
+    _this = _callSuper(this, AbstractLayer3D);
+    _this.W = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.b = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.A = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.Z = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.gW = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.gb = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.vW = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.vb = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.sW = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.sb = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.dW = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    _this.db = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    return _this;
+  }
+  _inherits(AbstractLayer3D, _AbstractLayer);
+  return _createClass(AbstractLayer3D, [{
+    key: "configure",
+    value: function configure() {
+      // do nothing
+    }
+  }, {
+    key: "is1D",
+    value: function is1D() {
+      return false;
+    }
+  }, {
+    key: "is3D",
+    value: function is3D() {
+      return true;
+    }
+  }, {
+    key: "transition",
+    value: function transition(previousLayer) {
+      if (previousLayer.is3D()) {
+        this.setSize([previousLayer.getOutputWidth(), previousLayer.getOutputHeight(), previousLayer.getOutputDepth()]);
+      }
+      _superPropGet(AbstractLayer3D, "transition", this, 3)([previousLayer]);
+      return this;
+    }
+  }, {
+    key: "setSize",
+    value: function setSize(dimension) {
+      this.setWidth(dimension[0]);
+      this.setHeight(dimension[1]);
+      this.setDepth(dimension[2]);
+      return this;
+    }
+  }, {
+    key: "getSize",
+    value: function getSize() {
+      return [this.getWidth(), this.getHeight(), this.getDepth()];
+    }
+  }, {
+    key: "penalty",
+    value: function penalty() {
+      return this.W.pow(2).sum();
+    }
+  }]);
+}(_AbstractLayer__WEBPACK_IMPORTED_MODULE_0__.AbstractLayer);
+
+
+/***/ }),
+
 /***/ "./src/typescript/Layer/Backpropagation/AbstractBackpropagation.ts":
 /*!*************************************************************************!*\
   !*** ./src/typescript/Layer/Backpropagation/AbstractBackpropagation.ts ***!
@@ -423,12 +523,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BackpropagationToMaxPool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BackpropagationToMaxPool */ "./src/typescript/Layer/Backpropagation/BackpropagationToMaxPool.ts");
 /* harmony import */ var _BackpropagationToConv__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BackpropagationToConv */ "./src/typescript/Layer/Backpropagation/BackpropagationToConv.ts");
 /* harmony import */ var _BackpropagationToRecurrent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./BackpropagationToRecurrent */ "./src/typescript/Layer/Backpropagation/BackpropagationToRecurrent.ts");
+/* harmony import */ var _BackpropagationToLSTM__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./BackpropagationToLSTM */ "./src/typescript/Layer/Backpropagation/BackpropagationToLSTM.ts");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -444,6 +546,9 @@ var BackpropagationFactory = /*#__PURE__*/function () {
     value: function create(previousLayer, layer) {
       if (layer.getType() === _types__WEBPACK_IMPORTED_MODULE_0__.LayerType.rnnlayer) {
         return new _BackpropagationToRecurrent__WEBPACK_IMPORTED_MODULE_5__.BackpropagationToRecurrent(layer, previousLayer);
+      }
+      if (layer.getType() === _types__WEBPACK_IMPORTED_MODULE_0__.LayerType.lstm) {
+        return new _BackpropagationToLSTM__WEBPACK_IMPORTED_MODULE_6__.BackpropagationToLSTM(layer, previousLayer);
       }
       if (previousLayer == null) {
         if (layer.is1D()) {
@@ -586,6 +691,125 @@ var BackpropagationToConv = /*#__PURE__*/function (_AbstractBackPropagat) {
         }
         return tmpResult;
       }
+    }
+  }]);
+}(_AbstractBackpropagation__WEBPACK_IMPORTED_MODULE_0__.AbstractBackPropagation);
+
+/***/ }),
+
+/***/ "./src/typescript/Layer/Backpropagation/BackpropagationToLSTM.ts":
+/*!***********************************************************************!*\
+  !*** ./src/typescript/Layer/Backpropagation/BackpropagationToLSTM.ts ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BackpropagationToLSTM: () => (/* binding */ BackpropagationToLSTM)
+/* harmony export */ });
+/* harmony import */ var _AbstractBackpropagation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractBackpropagation */ "./src/typescript/Layer/Backpropagation/AbstractBackpropagation.ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+var BackpropagationToLSTM = /*#__PURE__*/function (_AbstractBackPropagat) {
+  function BackpropagationToLSTM() {
+    _classCallCheck(this, BackpropagationToLSTM);
+    return _callSuper(this, BackpropagationToLSTM, arguments);
+  }
+  _inherits(BackpropagationToLSTM, _AbstractBackPropagat);
+  return _createClass(BackpropagationToLSTM, [{
+    key: "propagate",
+    value: function propagate(input, numberOfExamples, regularization, layer, sigma) {
+      var lstmLayer = layer;
+      var _lstmLayer$cache = lstmLayer.cache,
+        A = _lstmLayer$cache.A,
+        C = _lstmLayer$cache.C,
+        X = _lstmLayer$cache.X,
+        F = _lstmLayer$cache.F,
+        I = _lstmLayer$cache.I,
+        G = _lstmLayer$cache.G,
+        O = _lstmLayer$cache.O;
+      var sequenceLength = X.length;
+      var hiddenSize = lstmLayer.getWidth();
+
+      // Inicjalizacja gradientów propagowanych w czasie
+      var daNext = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D(hiddenSize, 1).setZeros();
+      var dcNext = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D(hiddenSize, 1).setZeros();
+
+      // Pętla wsteczna po krokach czasowych (BPTT)
+      for (var t = sequenceLength - 1; t >= 0; t--) {
+        // Gradient dla stanu ukrytego a<t> = błąd z wyjścia + błąd z przyszłości
+        var da = sigma.col(t).add(daNext);
+
+        // --- Obliczanie gradientów dla każdej bramki ---
+
+        // Bramka wyjściowa (Output Gate)
+        var dot = da.multiply(C[t + 1].tanh());
+        var dZo = dot.multiply(O[t]).multiply(O[t].minusOne().multiply(-1)); // d(sigmoid)
+
+        // Stan komórki (Cell State)
+        var dc = da.multiply(O[t]).multiply(lstmLayer.derivative(C[t + 1])).add(dcNext);
+
+        // Bramka zapominania (Forget Gate)
+        var dft = dc.multiply(C[t]);
+        var dZf = dft.multiply(F[t]).multiply(F[t].minusOne().multiply(-1)); // d(sigmoid)
+
+        // Bramka wejściowa (Input Gate)
+        var dit = dc.multiply(G[t]);
+        var dZi = dit.multiply(I[t]).multiply(I[t].minusOne().multiply(-1)); // d(sigmoid)
+
+        // Bramka kandydująca (Candidate Gate)
+        var dgt = dc.multiply(I[t]);
+        var dZg = dgt.multiply(lstmLayer.derivative(G[t])); // d(tanh)
+
+        // --- Połączenie gradientów bramek i obliczenie gradientów wag ---
+
+        // Połącz gradienty bramek w jedną macierz [dZf, dZi, dZg, dZo]
+        var dZ = impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D.vstack([dZf, dZi, dZg, dZo]);
+
+        // Oblicz gradienty dla wag i biasów
+        lstmLayer.dW = lstmLayer.dW.add(dZ.dot(X[t].transpose()));
+        lstmLayer.dU = lstmLayer.dU.add(dZ.dot(A[t].transpose()));
+        lstmLayer.db = lstmLayer.db.add(dZ);
+
+        // --- Propagacja gradientów do poprzedniego kroku czasowego ---
+
+        // da_next (dla t-1) = U^T * dZ
+        daNext = lstmLayer.U.transpose().dot(dZ);
+        // dc_next (dla t-1) = dc * f<t>
+        dcNext = dc.multiply(F[t]);
+      }
+
+      // --- Finalizacja gradientów ---
+
+      // 1. Obcinanie gradientów (Gradient Clipping) - kluczowe dla stabilności LSTM
+      var clipValue = 5;
+      for (var _i = 0, _arr = [lstmLayer.dW, lstmLayer.dU, lstmLayer.db]; _i < _arr.length; _i++) {
+        var d = _arr[_i];
+        d.clip(-clipValue, clipValue);
+      }
+
+      // 2. Dodanie regularyzacji do wag
+      lstmLayer.dW = lstmLayer.dW.add(lstmLayer.W.multiply(regularization));
+      lstmLayer.dU = lstmLayer.dU.add(lstmLayer.U.multiply(regularization));
+
+      // Warstwa LSTM nie propaguje błędu dalej w standardowy sposób.
+      return new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
     }
   }]);
 }(_AbstractBackpropagation__WEBPACK_IMPORTED_MODULE_0__.AbstractBackPropagation);
@@ -785,6 +1009,561 @@ var BackpropagationToRecurrent = /*#__PURE__*/function (_AbstractBackPropagat) {
 
 /***/ }),
 
+/***/ "./src/typescript/Layer/Conv.ts":
+/*!**************************************!*\
+  !*** ./src/typescript/Layer/Conv.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ConvLayer: () => (/* binding */ ConvLayer)
+/* harmony export */ });
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types */ "./src/typescript/types.ts");
+/* harmony import */ var _AbstractLayer3D__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AbstractLayer3D */ "./src/typescript/Layer/AbstractLayer3D.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+/**
+ * Warstwa konwolucyjna (Convolutional Layer).
+ * Przetwarza dane wejściowe 3D (wysokość, szerokość, głębokość/kanały)
+ * za pomocą zestawu filtrów, aby wyodrębnić cechy takie jak krawędzie, tekstury itp.
+ */
+var ConvLayer = /*#__PURE__*/function (_AbstractLayer3D) {
+  function ConvLayer() {
+    var _this;
+    _classCallCheck(this, ConvLayer);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, ConvLayer, [].concat(args));
+    _defineProperty(_this, "numFilters", 8);
+    _defineProperty(_this, "filterSize", 3);
+    _defineProperty(_this, "padding", 1);
+    _defineProperty(_this, "stride", 1);
+    // Pamięć podręczna dla wstecznej propagacji
+    _defineProperty(_this, "cache", {});
+    return _this;
+  }
+  _inherits(ConvLayer, _AbstractLayer3D);
+  return _createClass(ConvLayer, [{
+    key: "penalty",
+    value: function penalty() {
+      return this.W.pow(2).sum().get()[0];
+    }
+  }, {
+    key: "configure",
+    value: function configure() {
+      var inputDepth = this.getDepth();
+      var filterWeightCount = this.filterSize * this.filterSize * inputDepth;
+      this.W = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(this.numFilters, filterWeightCount).setRandom(filterWeightCount);
+      this.b = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(this.numFilters, 1).setZeros();
+      this.gW = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(this.numFilters, filterWeightCount).setZeros();
+      this.gb = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(this.numFilters, 1).setZeros();
+    }
+  }, {
+    key: "getOutputHeight",
+    value: function getOutputHeight() {
+      return Math.floor((this.getHeight() - this.filterSize + 2 * this.padding) / this.stride + 1);
+    }
+  }, {
+    key: "getOutputWidth",
+    value: function getOutputWidth() {
+      return Math.floor((this.getWidth() - this.filterSize + 2 * this.padding) / this.stride + 1);
+    }
+  }, {
+    key: "getOutputDepth",
+    value: function getOutputDepth() {
+      return this.numFilters;
+    }
+  }, {
+    key: "im2col",
+    value: function im2col(input, batchSize) {
+      var _this2 = this;
+      var _ref = [this.getHeight(), this.getWidth(), this.getDepth()],
+        inputHeight = _ref[0],
+        inputWidth = _ref[1],
+        inputDepth = _ref[2];
+      var outputHeight = this.getOutputHeight();
+      var outputWidth = this.getOutputWidth();
+      var filterArea = this.filterSize * this.filterSize;
+      var result = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(filterArea * inputDepth, outputHeight * outputWidth * batchSize).allocate().calcSync(function (calc) {
+        return calc.img2col(_this2.filterSize, _this2.stride, _this2.padding);
+      });
+      return result;
+    }
+
+    /**
+     * Przetwarza partię danych wejściowych.
+     * @param input Macierz o wymiarach (wysokość * szerokość * głębokość, liczba_przykładów)
+     */
+  }, {
+    key: "forward",
+    value: function forward(input) {
+      var batchSize = input.cols();
+      var outputHeight = this.getOutputHeight();
+      var outputWidth = this.getOutputWidth();
+
+      // 1. Przekształć wejście za pomocą im2col
+      var inputCols = this.im2col(input, batchSize);
+      this.cache = {
+        inputCols: inputCols,
+        inputShape: [this.getHeight(), this.getWidth(), this.getDepth()]
+      };
+
+      // 2. Wykonaj operację konwolucji jako jedno mnożenie macierzy
+      var result = this.W.dot(inputCols).add(this.b);
+
+      // 3. Przekształć wynik do odpowiedniego formatu wyjściowego
+      var reshapedResult = result.reshape(this.numFilters, outputHeight * outputWidth * batchSize);
+
+      // 4. Zastosuj funkcję aktywacji
+      this.Z = reshapedResult;
+      this.A = this.activation(this.Z);
+      return this.A;
+    }
+  }, {
+    key: "activation",
+    value: function activation(m) {
+      return m.relu(); // ReLU jest standardem dla warstw konwolucyjnych
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(delta) {
+      return delta.reluDerivative(this.A);
+    }
+  }, {
+    key: "getType",
+    value: function getType() {
+      return _types__WEBPACK_IMPORTED_MODULE_1__.LayerType.conv;
+    }
+
+    // --- Settery dla parametrów warstwy ---
+  }, {
+    key: "setFilterSize",
+    value: function setFilterSize(size) {
+      this.filterSize = size;
+      return this;
+    }
+  }, {
+    key: "setNumFilters",
+    value: function setNumFilters(num) {
+      this.numFilters = num;
+      return this;
+    }
+  }, {
+    key: "setPadding",
+    value: function setPadding(pad) {
+      this.padding = pad;
+      return this;
+    }
+  }, {
+    key: "setStride",
+    value: function setStride(stride) {
+      this.stride = stride;
+      return this;
+    }
+  }]);
+}(_AbstractLayer3D__WEBPACK_IMPORTED_MODULE_2__.AbstractLayer3D);
+
+/***/ }),
+
+/***/ "./src/typescript/Layer/FullyConnected.ts":
+/*!************************************************!*\
+  !*** ./src/typescript/Layer/FullyConnected.ts ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FullyConnectedLayer: () => (/* binding */ FullyConnectedLayer)
+/* harmony export */ });
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types */ "./src/typescript/types.ts");
+/* harmony import */ var _AbstractLayer1D__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AbstractLayer1D */ "./src/typescript/Layer/AbstractLayer1D.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+/**
+ * Warstwa w pełni połączona (Fully Connected / Dense).
+ * Każdy neuron w tej warstwie jest połączony z każdym neuronem w warstwie poprzedniej.
+ * Jest to podstawowy budulec większości sieci neuronowych.
+ */
+var FullyConnectedLayer = /*#__PURE__*/function (_AbstractLayer1D) {
+  function FullyConnectedLayer() {
+    var _this;
+    _classCallCheck(this, FullyConnectedLayer);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, FullyConnectedLayer, [].concat(args));
+    // Pamięć podręczna dla wstecznej propagacji
+    _defineProperty(_this, "cache", {});
+    return _this;
+  }
+  _inherits(FullyConnectedLayer, _AbstractLayer1D);
+  return _createClass(FullyConnectedLayer, [{
+    key: "penalty",
+    value: function penalty() {
+      return this.W.pow(2).sum().get()[0];
+    }
+
+    /**
+     * Konfiguruje wagi i biasy warstwy.
+     * @param inputSize Rozmiar wektora wejściowego.
+     * @param outputSize Liczba neuronów w tej warstwie.
+     */
+  }, {
+    key: "configure",
+    value: function configure(inputSize, outputSize) {
+      this.width = outputSize; // W kontekście 1D, "width" to liczba neuronów
+      this.height = inputSize;
+
+      // Inicjalizacja wag (metoda Xavier)
+      this.W = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, inputSize).setRandom(inputSize);
+      // Inicjalizacja biasów
+      this.b = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, 1).setZeros();
+
+      // Inicjalizacja gradientów
+      this.gW = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, inputSize).setZeros();
+      this.gb = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, 1).setZeros();
+    }
+
+    /**
+     * Automatycznie konfiguruje rozmiar wejściowy na podstawie poprzedniej warstwy.
+     * Obsługuje "spłaszczanie" (flattening) danych z warstw 3D.
+     */
+  }, {
+    key: "transition",
+    value: function transition(previousLayer) {
+      this.previousLayer = previousLayer;
+      var inputSize;
+      if (previousLayer.is3D()) {
+        // Spłaszczanie wyjścia z warstwy 3D (Conv, MaxPool)
+        inputSize = previousLayer.getOutputWidth() * previousLayer.getOutputHeight() * previousLayer.getOutputDepth();
+      } else {
+        // Standardowe połączenie z warstwą 1D
+        inputSize = previousLayer.getOutputWidth();
+      }
+
+      // `this.width` jest już ustawione w konstruktorze lub przez `setSize`
+      this.configure(inputSize, this.getWidth());
+      return this;
+    }
+
+    /**
+     * Przetwarza partię danych wejściowych.
+     * @param input Macierz o wymiarach (input_size, batch_size)
+     */
+  }, {
+    key: "forward",
+    value: function forward(input) {
+      var batchSize = input.cols();
+      var currentInput = input;
+
+      // Jeśli poprzednia warstwa była 3D, spłaszcz wejście
+      if (this.previousLayer && this.previousLayer.is3D()) {
+        var inputSize = this.W.cols();
+        currentInput = input.reshape(inputSize, batchSize);
+      }
+      this.cache = {
+        input: currentInput
+      };
+
+      // Y = W * X + b
+      this.Z = this.W.dot(currentInput).add(this.b);
+      // W tej warstwie nie ma funkcji aktywacji.
+      // Aktywację (np. ReLU, Softmax) należy dodać jako osobną warstwę.
+      this.A = this.Z;
+      return this.A;
+    }
+
+    // Ta warstwa nie ma własnej funkcji aktywacji.
+  }, {
+    key: "activation",
+    value: function activation(m) {
+      return m;
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(delta) {
+      return delta;
+    }
+  }, {
+    key: "getType",
+    value: function getType() {
+      return _types__WEBPACK_IMPORTED_MODULE_1__.LayerType.fullyconnected;
+    }
+  }, {
+    key: "setSize",
+    value: function setSize(value) {
+      this.width = value;
+      return this;
+    }
+  }]);
+}(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_2__.AbstractLayer1D);
+
+/***/ }),
+
+/***/ "./src/typescript/Layer/LSTM.ts":
+/*!**************************************!*\
+  !*** ./src/typescript/Layer/LSTM.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   LSTMLayer: () => (/* binding */ LSTMLayer)
+/* harmony export */ });
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types */ "./src/typescript/types.ts");
+/* harmony import */ var _AbstractLayer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AbstractLayer */ "./src/typescript/Layer/AbstractLayer.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+/**
+ * Warstwa Long Short-Term Memory (LSTM).
+ * Jest to zaawansowany typ warstwy rekurencyjnej, który potrafi uczyć się
+ * długoterminowych zależności dzięki mechanizmowi bramek.
+ *
+ * Wymiary:
+ * - `height` (inputSize): Rozmiar wektora wejściowego w jednym kroku czasowym.
+ * - `width` (hiddenSize): Rozmiar wektora stanu ukrytego i stanu komórki.
+ */
+var LSTMLayer = /*#__PURE__*/function (_AbstractLayer) {
+  function LSTMLayer() {
+    var _this;
+    _classCallCheck(this, LSTMLayer);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, LSTMLayer, [].concat(args));
+    // --- Wagi i Biary (zoptymalizowana, połączona struktura) ---
+    // Połączone wagi dla wejść [Wf, Wi, Wg, Wo]
+    // Połączone wagi dla stanu rekurencyjnego [Uf, Ui, Ug, Uo]
+    // Połączone biasy [bf, bi, bg, bo]
+    // --- Gradienty ---
+    // --- Pamięć podręczna dla BPTT ---
+    _defineProperty(_this, "cache", {
+      A: [],
+      C: [],
+      X: [],
+      F: [],
+      I: [],
+      G: [],
+      O: []
+    });
+    return _this;
+  }
+  _inherits(LSTMLayer, _AbstractLayer);
+  return _createClass(LSTMLayer, [{
+    key: "penalty",
+    value: function penalty() {
+      var wPenalty = this.W.pow(2).sum().get()[0];
+      var uPenalty = this.U.pow(2).sum().get()[0];
+      return wPenalty + uPenalty;
+    }
+  }, {
+    key: "configure",
+    value: function configure() {
+      var inputSize = this.getHeight();
+      var hiddenSize = this.getWidth();
+
+      // Inicjalizacja połączonych macierzy wag (metoda Xavier)
+      // Każda macierz ma wysokość 4 * hiddenSize, ponieważ zawiera wagi dla 4 bramek.
+      this.W = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize * 4, inputSize).setRandom(inputSize);
+      this.U = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize * 4, hiddenSize).setRandom(hiddenSize);
+
+      // Inicjalizacja połączonego wektora biasów
+      this.b = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize * 4, 1).setZeros();
+
+      // Inicjalizacja gradientów
+      this.dW = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize * 4, inputSize).setZeros();
+      this.dU = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize * 4, hiddenSize).setZeros();
+      this.db = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize * 4, 1).setZeros();
+    }
+
+    /**
+     * Przetwarza całą sekwencję wejściową.
+     * @param input Macierz o wymiarach (input_size, sequence_length)
+     */
+  }, {
+    key: "forward",
+    value: function forward(input) {
+      var sequenceLength = input.cols();
+      var hiddenSize = this.getWidth();
+
+      // Inicjalizacja pamięci podręcznej i stanów początkowych
+      this.cache = {
+        A: [],
+        C: [],
+        X: [],
+        F: [],
+        I: [],
+        G: [],
+        O: []
+      };
+      var aPrev = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, 1).setZeros();
+      var cPrev = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, 1).setZeros();
+      this.cache.A.push(aPrev.clone());
+      this.cache.C.push(cPrev.clone());
+      var outputs = [];
+
+      // Pętla po krokach czasowych
+      for (var t = 0; t < sequenceLength; t++) {
+        var xt = input.col(t);
+        this.cache.X.push(xt.clone());
+
+        // 1. Oblicz aktywacje dla wszystkich bramek naraz (zoptymalizowane)
+        // Z = [Zf, Zi, Zg, Zo]^T
+        var Z = this.W.dot(xt).add(this.U.dot(aPrev)).add(this.b);
+
+        // 2. Podziel Z na poszczególne bramki i zastosuj funkcje aktywacji
+        var Zf = Z.slice(0, hiddenSize);
+        var Zi = Z.slice(hiddenSize, hiddenSize * 2);
+        var Zg = Z.slice(hiddenSize * 2, hiddenSize * 3);
+        var Zo = Z.slice(hiddenSize * 3, hiddenSize * 4);
+        var ft = Zf.sigmoid(); // Bramka zapominania
+        var it = Zi.sigmoid(); // Bramka wejściowa
+        var gt = Zg.tanh(); // Bramka kandydująca
+        var ot = Zo.sigmoid(); // Bramka wyjściowa
+
+        // 3. Oblicz nowy stan komórki i nowy stan ukryty
+        // c<t> = f<t> * c<t-1> + i<t> * g<t>
+        var cNext = ft.multiply(cPrev).add(it.multiply(gt));
+        // a<t> = o<t> * tanh(c<t>)
+        var aNext = ot.multiply(cNext.tanh());
+
+        // 4. Zapisz wyniki w cache i zaktualizuj stany
+        outputs.push(aNext);
+        this.cache.A.push(aNext);
+        this.cache.C.push(cNext);
+        this.cache.F.push(ft);
+        this.cache.I.push(it);
+        this.cache.G.push(gt);
+        this.cache.O.push(ot);
+        aPrev = aNext;
+        cPrev = cNext;
+      }
+
+      // Połącz wszystkie wyjścia (stany ukryte) w jedną macierz
+      return impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D.hstack(outputs);
+    }
+
+    // --- Implementacja metod abstrakcyjnych ---
+  }, {
+    key: "activation",
+    value: function activation(m) {
+      // Ta metoda nie jest bezpośrednio używana w pętli forward,
+      // ale jest wymagana przez interfejs.
+      return m.tanh();
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(a) {
+      // Pochodna tanh(x) to 1 - tanh(x)^2
+      return a.pow(2).minusOne();
+    }
+  }, {
+    key: "getType",
+    value: function getType() {
+      return _types__WEBPACK_IMPORTED_MODULE_1__.LayerType.lstm;
+    }
+  }, {
+    key: "is1D",
+    value: function is1D() {
+      return true;
+    }
+  }, {
+    key: "is3D",
+    value: function is3D() {
+      return false;
+    }
+  }, {
+    key: "transition",
+    value: function transition(previousLayer) {
+      this.previousLayer = previousLayer;
+      this.setHeight(previousLayer.getOutputHeight());
+      this.setDepth(this.getOutputHeight());
+      return this;
+    }
+  }, {
+    key: "getSize",
+    value: function getSize() {
+      return [this.getWidth(), this.getHeight()];
+    }
+  }, {
+    key: "getOutputWidth",
+    value: function getOutputWidth() {
+      return this.getWidth();
+    }
+  }, {
+    key: "getOutputHeight",
+    value: function getOutputHeight() {
+      return this.getWidth(); // W LSTM rozmiar wyjścia jest równy rozmiarowi stanu ukrytego
+    }
+  }, {
+    key: "getOutputDepth",
+    value: function getOutputDepth() {
+      return 1;
+    }
+  }]);
+}(_AbstractLayer__WEBPACK_IMPORTED_MODULE_2__.AbstractLayer);
+
+/***/ }),
+
 /***/ "./src/typescript/Layer/Logistic.ts":
 /*!******************************************!*\
   !*** ./src/typescript/Layer/Logistic.ts ***!
@@ -848,6 +1627,457 @@ var LogisticLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   }]);
 }(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
 
+
+/***/ }),
+
+/***/ "./src/typescript/Layer/MaxPool.ts":
+/*!*****************************************!*\
+  !*** ./src/typescript/Layer/MaxPool.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MaxPoolLayer: () => (/* binding */ MaxPoolLayer)
+/* harmony export */ });
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types */ "./src/typescript/types.ts");
+/* harmony import */ var _AbstractLayer3D__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AbstractLayer3D */ "./src/typescript/Layer/AbstractLayer3D.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+/**
+ * Warstwa Max-Pooling.
+ * Redukuje wymiarowość przestrzenną (wysokość i szerokość) map cech,
+ * zachowując najważniejsze informacje (maksymalne wartości) z każdego regionu.
+ */
+var MaxPoolLayer = /*#__PURE__*/function (_AbstractLayer3D) {
+  function MaxPoolLayer() {
+    var _this;
+    _classCallCheck(this, MaxPoolLayer);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, MaxPoolLayer, [].concat(args));
+    _defineProperty(_this, "filterSize", 2);
+    _defineProperty(_this, "stride", 2);
+    // Pamięć podręczna dla wstecznej propagacji, przechowująca indeksy maksymalnych wartości.
+    _defineProperty(_this, "cache", {});
+    return _this;
+  }
+  _inherits(MaxPoolLayer, _AbstractLayer3D);
+  return _createClass(MaxPoolLayer, [{
+    key: "penalty",
+    value:
+    // Warstwa Max-Pooling nie ma wag do uczenia się.
+    function penalty() {
+      return 0;
+    }
+  }, {
+    key: "configure",
+    value: function configure() {}
+  }, {
+    key: "activation",
+    value: function activation(m) {
+      return m;
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(delta) {
+      return delta;
+    }
+  }, {
+    key: "getOutputHeight",
+    value: function getOutputHeight() {
+      return Math.floor((this.getHeight() - this.filterSize) / this.stride + 1);
+    }
+  }, {
+    key: "getOutputWidth",
+    value: function getOutputWidth() {
+      return Math.floor((this.getWidth() - this.filterSize) / this.stride + 1);
+    }
+  }, {
+    key: "getOutputDepth",
+    value: function getOutputDepth() {
+      return this.getDepth(); // Głębokość pozostaje bez zmian
+    }
+
+    /**
+     * Przetwarza partię danych wejściowych.
+     * @param input Macierz o wymiarach (wysokość * szerokość * głębokość, liczba_przykładów)
+     */
+  }, {
+    key: "forward",
+    value: function forward(input) {
+      var batchSize = input.cols();
+      var _ref = [this.getHeight(), this.getWidth(), this.getDepth()],
+        inputHeight = _ref[0],
+        inputWidth = _ref[1],
+        inputDepth = _ref[2];
+      var outputHeight = this.getOutputHeight();
+      var outputWidth = this.getOutputWidth();
+      var output = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputHeight * outputWidth * inputDepth, batchSize).allocate().setZeros();
+      var switches = []; // Przechowuje indeksy maksymalnych wartości
+
+      var inputData = input.get();
+      var outputData = output.get();
+      for (var n = 0; n < batchSize; n++) {
+        var batchOffset = n * inputHeight * inputWidth * inputDepth;
+        for (var c = 0; c < inputDepth; c++) {
+          var channelOffset = c * inputHeight * inputWidth;
+          for (var y = 0; y < outputHeight; y++) {
+            for (var x = 0; x < outputWidth; x++) {
+              var startY = y * this.stride;
+              var startX = x * this.stride;
+              var maxVal = -Infinity;
+              var maxIndex = -1;
+
+              // Znajdź maksymalną wartość w oknie
+              for (var fy = 0; fy < this.filterSize; fy++) {
+                for (var fx = 0; fx < this.filterSize; fx++) {
+                  var imgY = startY + fy;
+                  var imgX = startX + fx;
+                  var currentIndex = batchOffset + channelOffset + imgY * inputWidth + imgX;
+                  var currentVal = inputData[currentIndex];
+                  if (currentVal > maxVal) {
+                    maxVal = currentVal;
+                    maxIndex = currentIndex;
+                  }
+                }
+              }
+
+              // Zapisz maksymalną wartość i jej indeks
+              var outputIndex = n * (outputHeight * outputWidth * inputDepth) + c * (outputHeight * outputWidth) + y * outputWidth + x;
+              outputData[outputIndex] = maxVal;
+              switches.push(maxIndex);
+            }
+          }
+        }
+      }
+      output.set(outputData);
+      this.cache = {
+        switches: switches,
+        inputShape: [inputHeight, inputWidth, inputDepth, batchSize]
+      };
+      this.A = output;
+      return this.A;
+    }
+  }, {
+    key: "getType",
+    value: function getType() {
+      return _types__WEBPACK_IMPORTED_MODULE_1__.LayerType.maxpool;
+    }
+
+    // --- Settery dla parametrów warstwy ---
+  }, {
+    key: "setFilterSize",
+    value: function setFilterSize(size) {
+      this.filterSize = size;
+      return this;
+    }
+  }, {
+    key: "getFilterSize",
+    value: function getFilterSize() {
+      return this.filterSize;
+    }
+  }, {
+    key: "setStride",
+    value: function setStride(stride) {
+      this.stride = stride;
+      return this;
+    }
+  }, {
+    key: "getStride",
+    value: function getStride() {
+      return this.stride;
+    }
+  }, {
+    key: "getPadding",
+    value: function getPadding() {
+      return 0;
+    } // Max-pooling zazwyczaj nie używa paddingu
+  }]);
+}(_AbstractLayer3D__WEBPACK_IMPORTED_MODULE_2__.AbstractLayer3D);
+
+/***/ }),
+
+/***/ "./src/typescript/Layer/Purelin.ts":
+/*!*****************************************!*\
+  !*** ./src/typescript/Layer/Purelin.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   PurelinLayer: () => (/* binding */ PurelinLayer)
+/* harmony export */ });
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../types */ "./src/typescript/types.ts");
+/* harmony import */ var _AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AbstractLayer1D */ "./src/typescript/Layer/AbstractLayer1D.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+var PurelinLayer = /*#__PURE__*/function (_AbstractLayer1D) {
+  function PurelinLayer() {
+    _classCallCheck(this, PurelinLayer);
+    return _callSuper(this, PurelinLayer, arguments);
+  }
+  _inherits(PurelinLayer, _AbstractLayer1D);
+  return _createClass(PurelinLayer, [{
+    key: "activation",
+    value: function activation(m) {
+      return m;
+    }
+  }, {
+    key: "getType",
+    value: function getType() {
+      return _types__WEBPACK_IMPORTED_MODULE_0__.LayerType.purelin;
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(delta) {
+      return delta.setOnes();
+    }
+  }, {
+    key: "activationAsync",
+    value: function activationAsync(value) {
+      return Promise.resolve(undefined);
+    }
+  }]);
+}(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
+
+
+/***/ }),
+
+/***/ "./src/typescript/Layer/Recurrent.ts":
+/*!*******************************************!*\
+  !*** ./src/typescript/Layer/Recurrent.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   RecurrentLayer: () => (/* binding */ RecurrentLayer)
+/* harmony export */ });
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../types */ "./src/typescript/types.ts");
+/* harmony import */ var _AbstractLayer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AbstractLayer */ "./src/typescript/Layer/AbstractLayer.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+/**
+ * Podstawowa warstwa rekurencyjna (RNN).
+ * Ta warstwa przetwarza sekwencje danych, utrzymując wewnętrzny stan.
+ *
+ * Wymiary:
+ * - `height` (inputSize): Rozmiar wektora wejściowego w jednym kroku czasowym.
+ * - `width` (hiddenSize): Rozmiar wektora stanu ukrytego.
+ * - `depth` (outputSize): Rozmiar wektora wyjściowego w jednym kroku czasowym.
+ */
+var RecurrentLayer = /*#__PURE__*/function (_AbstractLayer) {
+  function RecurrentLayer() {
+    var _this;
+    _classCallCheck(this, RecurrentLayer);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, RecurrentLayer, [].concat(args));
+    // --- Pamięć podręczna dla Backpropagation Through Time (BPTT) ---
+    _defineProperty(_this, "cache", {
+      A: [],
+      X: []
+    });
+    return _this;
+  }
+  _inherits(RecurrentLayer, _AbstractLayer);
+  return _createClass(RecurrentLayer, [{
+    key: "activationAsync",
+    value: function activationAsync(value) {
+      throw new Error("Method not implemented.");
+    }
+    // --- Wagi i Biary ---
+    // Wagi: Wejście -> Stan ukryty
+    // Wagi: Stan ukryty -> Stan ukryty
+    // Wagi: Stan ukryty -> Wyjście
+
+    // Bias: Stan ukryty
+    // Bias: Wyjście
+
+    // --- Gradienty ---
+  }, {
+    key: "penalty",
+    value: function penalty() {
+      // Prosta regularyzacja L2 dla wszystkich wag
+      var waaPenalty = this.Waa.pow(2).sum().get()[0];
+      var waxPenalty = this.Wax.pow(2).sum().get()[0];
+      var wyaPenalty = this.Wya.pow(2).sum().get()[0];
+      return waaPenalty + waxPenalty + wyaPenalty;
+    }
+  }, {
+    key: "configure",
+    value: function configure() {
+      var inputSize = this.getHeight();
+      var hiddenSize = this.getWidth();
+      var outputSize = this.getDepth();
+
+      // Inicjalizacja wag (metoda Xavier)
+      this.Wax = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, inputSize).setRandom(inputSize);
+      this.Waa = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, hiddenSize).setRandom(hiddenSize);
+      this.Wya = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, hiddenSize).setRandom(hiddenSize);
+
+      // Inicjalizacja biasów
+      this.ba = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, 1).setZeros();
+      this.by = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, 1).setZeros();
+
+      // Inicjalizacja gradientów
+      this.dWax = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, inputSize).setZeros();
+      this.dWaa = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, hiddenSize).setZeros();
+      this.dWya = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, hiddenSize).setZeros();
+      this.dba = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, 1).setZeros();
+      this.dby = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(outputSize, 1).setZeros();
+    }
+
+    /**
+     * Przetwarza całą sekwencję wejściową.
+     * @param input Macierz o wymiarach (input_size, sequence_length)
+     */
+  }, {
+    key: "forward",
+    value: function forward(input) {
+      var sequenceLength = input.cols();
+      var hiddenSize = this.getWidth();
+
+      // Inicjalizacja pamięci podręcznej i stanu początkowego
+      this.cache = {
+        A: [],
+        X: []
+      };
+      var aPrev = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D(hiddenSize, 1).setZeros();
+      this.cache.A.push(aPrev.clone());
+      var outputs = [];
+
+      // Pętla po krokach czasowych
+      for (var t = 0; t < sequenceLength; t++) {
+        var xt = input.col(t);
+        this.cache.X.push(xt.clone());
+
+        // Obliczenie stanu ukrytego: a<t> = tanh(Waa * a<t-1> + Wax * x<t> + ba)
+        var aNext = this.Waa.dot(aPrev).add(this.Wax.dot(xt)).add(this.ba).tanh();
+
+        // Obliczenie wyjścia: y<t> = Wya * a<t> + by (bez aktywacji)
+        var yt = this.Wya.dot(aNext).add(this.by);
+        outputs.push(yt);
+        this.cache.A.push(aNext);
+        aPrev = aNext;
+      }
+
+      // Połącz wszystkie wyjścia w jedną macierz
+      return impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_0__.CalcMatrix2D.hstack(outputs);
+    }
+
+    // --- Implementacja metod abstrakcyjnych ---
+  }, {
+    key: "activation",
+    value: function activation(m) {
+      return m.tanh();
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(a) {
+      // Pochodna tanh(x) to 1 - tanh(x)^2
+      return a.pow(2).minusOne().multiply(-1);
+    }
+  }, {
+    key: "getType",
+    value: function getType() {
+      return _types__WEBPACK_IMPORTED_MODULE_1__.LayerType.rnnlayer;
+    }
+  }, {
+    key: "is1D",
+    value: function is1D() {
+      return true; // Traktujemy sekwencję jako "płaską" warstwę
+    }
+  }, {
+    key: "is3D",
+    value: function is3D() {
+      return false;
+    }
+  }, {
+    key: "transition",
+    value: function transition(previousLayer) {
+      this.previousLayer = previousLayer;
+      this.setHeight(previousLayer.getOutputHeight());
+      this.setDepth(this.getOutputHeight()); // Domyślnie output_size = hidden_size
+      return this;
+    }
+  }, {
+    key: "getSize",
+    value: function getSize() {
+      return [this.getWidth(), this.getHeight(), this.getDepth()];
+    }
+  }, {
+    key: "getOutputWidth",
+    value: function getOutputWidth() {
+      return this.getWidth();
+    }
+  }, {
+    key: "getOutputHeight",
+    value: function getOutputHeight() {
+      return this.getDepth();
+    }
+  }, {
+    key: "getOutputDepth",
+    value: function getOutputDepth() {
+      return 1;
+    }
+  }]);
+}(_AbstractLayer__WEBPACK_IMPORTED_MODULE_2__.AbstractLayer);
 
 /***/ }),
 
@@ -1102,7 +2332,13 @@ var TanhLayer = /*#__PURE__*/function (_AbstractLayer1D) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AbstractLayer: () => (/* reexport safe */ _AbstractLayer__WEBPACK_IMPORTED_MODULE_0__.AbstractLayer),
+/* harmony export */   ConvLayer: () => (/* reexport safe */ _Conv__WEBPACK_IMPORTED_MODULE_6__.ConvLayer),
+/* harmony export */   FullyConnectedLayer: () => (/* reexport safe */ _FullyConnected__WEBPACK_IMPORTED_MODULE_7__.FullyConnectedLayer),
+/* harmony export */   LSTMLayer: () => (/* reexport safe */ _LSTM__WEBPACK_IMPORTED_MODULE_11__.LSTMLayer),
 /* harmony export */   LogisticLayer: () => (/* reexport safe */ _Logistic__WEBPACK_IMPORTED_MODULE_2__.LogisticLayer),
+/* harmony export */   MaxPoolLayer: () => (/* reexport safe */ _MaxPool__WEBPACK_IMPORTED_MODULE_8__.MaxPoolLayer),
+/* harmony export */   PurelinLayer: () => (/* reexport safe */ _Purelin__WEBPACK_IMPORTED_MODULE_10__.PurelinLayer),
+/* harmony export */   RecurrentLayer: () => (/* reexport safe */ _Recurrent__WEBPACK_IMPORTED_MODULE_9__.RecurrentLayer),
 /* harmony export */   ReluLayer: () => (/* reexport safe */ _Relu__WEBPACK_IMPORTED_MODULE_4__.ReluLayer),
 /* harmony export */   SoftmaxLayer: () => (/* reexport safe */ _Softmax__WEBPACK_IMPORTED_MODULE_1__.SoftmaxLayer),
 /* harmony export */   SoftplusLayer: () => (/* reexport safe */ _Softplus__WEBPACK_IMPORTED_MODULE_5__.SoftplusLayer),
@@ -1114,18 +2350,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Tanh__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Tanh */ "./src/typescript/Layer/Tanh.ts");
 /* harmony import */ var _Relu__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Relu */ "./src/typescript/Layer/Relu.ts");
 /* harmony import */ var _Softplus__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Softplus */ "./src/typescript/Layer/Softplus.ts");
+/* harmony import */ var _Conv__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Conv */ "./src/typescript/Layer/Conv.ts");
+/* harmony import */ var _FullyConnected__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./FullyConnected */ "./src/typescript/Layer/FullyConnected.ts");
+/* harmony import */ var _MaxPool__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./MaxPool */ "./src/typescript/Layer/MaxPool.ts");
+/* harmony import */ var _Recurrent__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Recurrent */ "./src/typescript/Layer/Recurrent.ts");
+/* harmony import */ var _Purelin__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Purelin */ "./src/typescript/Layer/Purelin.ts");
+/* harmony import */ var _LSTM__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./LSTM */ "./src/typescript/Layer/LSTM.ts");
 
 
 
 
 
 
-//import { ConvLayer } from "./Conv";
-//import { FullyConnectedLayer } from "./FullyConnected";
-//import { MaxPoolLayer } from "./MaxPool";
-//import { RecurrentLayer } from "./Recurrent";
-//import { PurelinLayer } from "./Purelin";
-//import { LSTMLayer } from "./LSTM";
+
+
+
+
+
 
 
 
@@ -1716,6 +2957,133 @@ var NetworkBuilder1D = /*#__PURE__*/function (_AbstractNetworkBuild) {
 
 /***/ }),
 
+/***/ "./src/typescript/NetworkBuilder/NetworkBuilder3D.ts":
+/*!***********************************************************!*\
+  !*** ./src/typescript/NetworkBuilder/NetworkBuilder3D.ts ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NetworkBuilder3D: () => (/* binding */ NetworkBuilder3D)
+/* harmony export */ });
+/* harmony import */ var _AbstractNetworkBuilder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractNetworkBuilder */ "./src/typescript/NetworkBuilder/AbstractNetworkBuilder.ts");
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! fs */ "fs");
+/* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Layer___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Layer/ */ "./src/typescript/Layer/index.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+
+
+
+var NetworkBuilder3D = /*#__PURE__*/function (_AbstractNetworkBuild) {
+  function NetworkBuilder3D() {
+    _classCallCheck(this, NetworkBuilder3D);
+    return _callSuper(this, NetworkBuilder3D, arguments);
+  }
+  _inherits(NetworkBuilder3D, _AbstractNetworkBuild);
+  return _createClass(NetworkBuilder3D, [{
+    key: "firstLayerTransition",
+    value: function firstLayerTransition(layer) {
+      if (this.dimensions) {
+        // @ts-ignore
+        layer.setSize(this.dimensions);
+      }
+    }
+  }], [{
+    key: "fromJSON",
+    value: function fromJSON(jsonPath) {
+      return new Promise(function (resolve, reject) {
+        fs__WEBPACK_IMPORTED_MODULE_1__.readFile(jsonPath, function (err, data) {
+          if (err) {
+            reject(err);
+            return;
+          }
+          var json = JSON.parse(data.toString());
+          var builder = new NetworkBuilder3D(json["size"]);
+          json["layers"].forEach(function (layerData) {
+            if (layerData["type"] === "logistic") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.LogisticLayer, function (layer) {
+                // @ts-ignore
+                layer.setSize(layerData["size"]);
+              });
+            } else if (layerData["type"] === "softmax") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.SoftmaxLayer, function (layer) {
+                // @ts-ignore
+                layer.setSize(layerData["size"]);
+              });
+            } else if (layerData["type"] === "relu") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.ReluLayer, function (layer) {
+                // @ts-ignore
+                layer.setSize(layerData["size"]);
+              });
+            } else if (layerData["type"] === "softplus") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.SoftplusLayer, function (layer) {
+                // @ts-ignore
+                layer.setSize(layerData["size"]);
+              });
+            } else if (layerData["type"] === "tanh") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.TanhLayer, function (layer) {
+                // @ts-ignore
+                layer.setSize(layerData["size"]);
+              });
+            } else if (layerData["type"] === "conv") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.ConvLayer, function (layer) {
+                layer.setSize(layerData["size"]);
+                layer.setFilterSize(layerData["filterSize"]);
+                layer.setStride(layerData["stride"]);
+                layer.setNumFilters(layerData["numFilters"]);
+                layer.setPadding(layerData["padding"]);
+              });
+            } else if (layerData["type"] === "maxpool") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.MaxPoolLayer, function (layer) {
+                layer.setSize(layerData["size"]);
+                layer.setFilterSize(layerData["filterSize"]);
+                layer.setStride(layerData["stride"]);
+              });
+            } else if (layerData["type"] === "fullyconnected") {
+              // @ts-ignore
+              builder.createLayer(_Layer___WEBPACK_IMPORTED_MODULE_2__.MaxPoolLayer);
+            }
+          });
+          var network = builder.getNetwork();
+          if (network) {
+            network.getLayers().forEach(function (layer, i) {
+              layer.W = json["layers"]["W"];
+              layer.b = json["layers"]["b"];
+            });
+            resolve(network);
+          }
+        });
+      });
+    }
+  }]);
+}(_AbstractNetworkBuilder__WEBPACK_IMPORTED_MODULE_0__.AbstractNetworkBuilder);
+
+
+/***/ }),
+
 /***/ "./src/typescript/NetworkBuilder/index.ts":
 /*!************************************************!*\
   !*** ./src/typescript/NetworkBuilder/index.ts ***!
@@ -1726,13 +3094,14 @@ var NetworkBuilder1D = /*#__PURE__*/function (_AbstractNetworkBuild) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AbstractNetworkBuilder: () => (/* reexport safe */ _AbstractNetworkBuilder__WEBPACK_IMPORTED_MODULE_0__.AbstractNetworkBuilder),
-/* harmony export */   NetworkBuilder1D: () => (/* reexport safe */ _NetworkBuilder1D__WEBPACK_IMPORTED_MODULE_1__.NetworkBuilder1D)
+/* harmony export */   NetworkBuilder1D: () => (/* reexport safe */ _NetworkBuilder1D__WEBPACK_IMPORTED_MODULE_1__.NetworkBuilder1D),
+/* harmony export */   NetworkBuilder3D: () => (/* reexport safe */ _NetworkBuilder3D__WEBPACK_IMPORTED_MODULE_2__.NetworkBuilder3D)
 /* harmony export */ });
 /* harmony import */ var _AbstractNetworkBuilder__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractNetworkBuilder */ "./src/typescript/NetworkBuilder/AbstractNetworkBuilder.ts");
 /* harmony import */ var _NetworkBuilder1D__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./NetworkBuilder1D */ "./src/typescript/NetworkBuilder/NetworkBuilder1D.ts");
+/* harmony import */ var _NetworkBuilder3D__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NetworkBuilder3D */ "./src/typescript/NetworkBuilder/NetworkBuilder3D.ts");
 
 
-//import { NetworkBuilder3D } from "./NetworkBuilder3D";
 
 
 
@@ -2808,6 +4177,7 @@ var LayerType = /*#__PURE__*/function (LayerType) {
   LayerType["fullyconnected"] = "fullyconnected";
   LayerType["purelin"] = "purelin";
   LayerType["rnnlayer"] = "rnnlayer";
+  LayerType["lstm"] = "lstm";
   return LayerType;
 }({});
 
@@ -2938,7 +4308,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var NetworkBuilder = {
-  NetworkBuilder1D: _NetworkBuilder__WEBPACK_IMPORTED_MODULE_0__.NetworkBuilder1D
+  NetworkBuilder1D: _NetworkBuilder__WEBPACK_IMPORTED_MODULE_0__.NetworkBuilder1D,
+  NetworkBuilder3D: _NetworkBuilder__WEBPACK_IMPORTED_MODULE_0__.NetworkBuilder3D
 };
 var Math = {
   Matrix: impulse_math_ts__WEBPACK_IMPORTED_MODULE_2__.Matrix
@@ -2948,12 +4319,12 @@ var Layer = {
   LogisticLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.LogisticLayer,
   ReluLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.ReluLayer,
   SoftplusLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.SoftplusLayer,
-  TanhLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.TanhLayer
-  // ConvLayer,
-  //MaxPoolLayer,
-  //FullyConnectedLayer,
-  //RecurrentLayer,
-  //LSTMLayer,
+  TanhLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.TanhLayer,
+  ConvLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.ConvLayer,
+  MaxPoolLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.MaxPoolLayer,
+  FullyConnectedLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.FullyConnectedLayer,
+  RecurrentLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.RecurrentLayer,
+  LSTMLayer: _Layer__WEBPACK_IMPORTED_MODULE_1__.LSTMLayer
 };
 var Optimizer = {
   OptimizerAdam: _Trainer_Optimizer__WEBPACK_IMPORTED_MODULE_3__.OptimizerAdam,

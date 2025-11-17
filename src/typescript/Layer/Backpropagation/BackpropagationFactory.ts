@@ -5,11 +5,16 @@ import { BackpropagationToMaxPool } from "./BackpropagationToMaxPool";
 import { BackpropagationToConv } from "./BackpropagationToConv";
 import { AbstractBackPropagation } from "./AbstractBackpropagation";
 import { BackpropagationToRecurrent } from "./BackpropagationToRecurrent";
+import { BackpropagationToLSTM } from "./BackpropagationToLSTM";
 
 export class BackpropagationFactory {
   static create(previousLayer: Layers, layer: Layers): AbstractBackPropagation | null {
     if (layer.getType() === LayerType.rnnlayer) {
       return new BackpropagationToRecurrent(layer, previousLayer);
+    }
+
+    if (layer.getType() === LayerType.lstm) {
+      return new BackpropagationToLSTM(layer, previousLayer);
     }
 
     if (previousLayer == null) {

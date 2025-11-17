@@ -1,15 +1,15 @@
-import { NetworkBuilder1D } from "./NetworkBuilder";
+import { NetworkBuilder1D, NetworkBuilder3D } from "./NetworkBuilder";
 import {
   SoftmaxLayer,
   LogisticLayer,
   ReluLayer,
   SoftplusLayer,
   TanhLayer,
-  //ConvLayer,
-  //FullyConnectedLayer,
-  //MaxPoolLayer,
-  //RecurrentLayer,
-  //LSTMLayer,
+  ConvLayer,
+  FullyConnectedLayer,
+  MaxPoolLayer,
+  RecurrentLayer,
+  LSTMLayer,
 } from "./Layer";
 import { Matrix } from "impulse-math-ts";
 import {
@@ -24,7 +24,7 @@ import { NetworkRNN, NetworkLSTM } from "./Network";
 import { MeanSquaredErrorCost} from "./Trainer/Cost/MeanSquaredErrorCost";
 import { CrossEntropyCost } from "./Trainer/Cost/CrossEntropyCost";
 
-const NetworkBuilder = { NetworkBuilder1D };
+const NetworkBuilder = { NetworkBuilder1D, NetworkBuilder3D };
 const Math = {
   Matrix,
 };
@@ -34,11 +34,11 @@ const Layer = {
   ReluLayer,
   SoftplusLayer,
   TanhLayer,
-  // ConvLayer,
-  //MaxPoolLayer,
-  //FullyConnectedLayer,
-  //RecurrentLayer,
-  //LSTMLayer,
+  ConvLayer,
+  MaxPoolLayer,
+  FullyConnectedLayer,
+  RecurrentLayer,
+  LSTMLayer,
 };
 const Optimizer = {
   OptimizerAdam,
