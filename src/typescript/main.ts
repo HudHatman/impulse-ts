@@ -21,6 +21,8 @@ import {
 } from "./Trainer/Optimizer";
 import { MiniBatchTrainer, Trainer as TrainerTrainer, RNNTrainer } from "./Trainer";
 import { NetworkRNN, NetworkLSTM } from "./Network";
+import { MeanSquaredErrorCost} from "./Trainer/Cost/MeanSquaredErrorCost";
+import { CrossEntropyCost } from "./Trainer/Cost/CrossEntropyCost";
 
 const NetworkBuilder = { NetworkBuilder1D };
 const Math = {
@@ -55,4 +57,8 @@ const Network = {
   NetworkLSTM,
 };
 
-export { NetworkBuilder, Math, Layer, Optimizer, Trainer, Network };
+const Cost = {
+  MeanSquaredErrorCost, CrossEntropyCost
+}
+
+export { NetworkBuilder, Math, Layer, Optimizer, Trainer, Network, Cost };

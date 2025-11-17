@@ -22,6 +22,10 @@ class Network {
     return this.layers;
   }
 
+  getLastLayer(): Layers {
+    return this.layers[this.layers.length - 1];
+  }
+
   forward(input: CalcMatrix2D): CalcMatrix2D {
     let output = input;
 
@@ -32,23 +36,35 @@ class Network {
     return output;
   }
 
-  backward(X: CalcMatrix2D, Y: CalcMatrix2D, regularization: number): void {
+  forwardAsync(input: CalcMatrix2D): Promise<CalcMatrix2D> {
+    return new Promise((resolve) => {
+      let output = input.clone();
+      let l = 0;
+      const next = () => {
+        return this.layers[l].forwardAsync(output).then((out) => {
+          output.destroy();
+          output = out;
+          if (l < this.layers.length - 1) {
+            l++;
+            next();
+          } else {
+            resolve(output);
+          }
+        })
+      };
+
+      next();
+    })
+  }
+
+  backward(X: CalcMatrix2D, regularization: number, sigma: CalcMatrix2D): void {
     const m = X.cols();
-    const predictions = this.forward(X);
+    let currentSigma = sigma;
 
-    let sigma = predictions.subtract(Y);
-
-    for (let layer = this.layers.length - 1; layer >= 0; layer -= 1) {
-      sigma = this.layers[layer].getBackPropagation().propagate(X, m, regularization, this.layers[layer], sigma);
+    for (let i = this.layers.length - 1; i >= 0; i -= 1) {
+      const layer = this.layers[i];
+      currentSigma = layer.getBackPropagation().propagate(X, m, regularization, layer, currentSigma);
     }
-  }
-
-  public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
-    return this.layers[this.layers.length - 1].loss(correctOutput, predictions);
-  }
-
-  public error(miniBatchSize: number) {
-    return this.layers[this.layers.length - 1].error(miniBatchSize);
   }
 
   save(path: string): Promise<string> {

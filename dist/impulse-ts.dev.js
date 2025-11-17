@@ -89,16 +89,6 @@ var AbstractLayer = /*#__PURE__*/function () {
       this.previousLayer = previousLayer;
       return this;
     }
-  }, {
-    key: "loss",
-    value: function loss(correctOutput, predictions) {
-      return 0;
-    }
-  }, {
-    key: "error",
-    value: function error(batchSize) {
-      return 0;
-    }
   }]);
 }();
 
@@ -120,6 +110,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
 /* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__);
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -189,6 +185,35 @@ var AbstractLayer1D = /*#__PURE__*/function (_AbstractLayer) {
       this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols()));
       this.A = this.activation(this.Z);
       return this.A;
+    }
+  }, {
+    key: "forwardAsync",
+    value: function forwardAsync(input) {
+      var _this2 = this;
+      return new Promise(function (resolve) {
+        Promise.all([_this2.W.calcAsync(function (calc) {
+          return calc.dot(input);
+        }), _this2.b.calcAsync(function (calc) {
+          return calc.replicate(1, input.cols());
+        })]).then(function (_ref) {
+          var _ref2 = _slicedToArray(_ref, 2),
+            dot = _ref2[0],
+            replicate = _ref2[1];
+          dot.calcAsync(function (calc) {
+            return calc.add(replicate);
+          }).then(function (added) {
+            _this2.Z.copyFrom(added);
+            _this2.activationAsync(_this2.Z).then(function (activation) {
+              _this2.A.copyFrom(activation);
+              dot.destroy();
+              replicate.destroy();
+              added.destroy();
+              activation.destroy();
+              resolve(_this2.A);
+            });
+          });
+        });
+      });
     }
   }, {
     key: "is1D",
@@ -697,6 +722,17 @@ var LogisticLayer = /*#__PURE__*/function (_AbstractLayer1D) {
       return m.logisticForwardPropagation();
     }
   }, {
+    key: "activationAsync",
+    value: function activationAsync(m) {
+      return new Promise(function (resolve) {
+        m.calcAsync(function (calc) {
+          calc.logisticForwardPropagation().then(function (a) {
+            resolve(a);
+          });
+        });
+      });
+    }
+  }, {
     key: "getType",
     value: function getType() {
       return _types__WEBPACK_IMPORTED_MODULE_0__.LayerType.logistic;
@@ -705,17 +741,6 @@ var LogisticLayer = /*#__PURE__*/function (_AbstractLayer1D) {
     key: "derivative",
     value: function derivative(delta) {
       return delta.logisticBackwardPropagation();
-    }
-  }, {
-    key: "loss",
-    value: function loss(correctOutput, predictions) {
-      var result = correctOutput.multiply(predictions.log()).add(correctOutput.minusOne().multiply(predictions.logMinusOne()));
-      return result.sum().get()[0];
-    }
-  }, {
-    key: "error",
-    value: function error(batchSize) {
-      return -1.0 / batchSize;
     }
   }]);
 }(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
@@ -761,6 +786,17 @@ var ReluLayer = /*#__PURE__*/function (_AbstractLayer1D) {
     key: "activation",
     value: function activation(m) {
       return m.setMin(0.0);
+    }
+  }, {
+    key: "activationAsync",
+    value: function activationAsync(m) {
+      return new Promise(function (resolve) {
+        m.calcAsync(function (calc) {
+          calc.setMin(0.0).then(function (a) {
+            resolve(a);
+          });
+        });
+      });
     }
   }, {
     key: "getType",
@@ -826,17 +862,6 @@ var SoftmaxLayer = /*#__PURE__*/function (_AbstractLayer1D) {
     key: "derivative",
     value: function derivative(delta) {
       return delta.softmaxDerivative();
-    }
-  }, {
-    key: "loss",
-    value: function loss(correctOutput, predictions) {
-      var result = correctOutput.multiply(predictions.log());
-      return result.sum().get()[0];
-    }
-  }, {
-    key: "error",
-    value: function error(batchSize) {
-      return -1.0 / batchSize;
     }
   }]);
 }(_AbstractLayer1D__WEBPACK_IMPORTED_MODULE_1__.AbstractLayer1D);
@@ -1036,6 +1061,11 @@ var Network = /*#__PURE__*/function () {
       return this.layers;
     }
   }, {
+    key: "getLastLayer",
+    value: function getLastLayer() {
+      return this.layers[this.layers.length - 1];
+    }
+  }, {
     key: "forward",
     value: function forward(input) {
       var output = input;
@@ -1045,24 +1075,36 @@ var Network = /*#__PURE__*/function () {
       return output;
     }
   }, {
+    key: "forwardAsync",
+    value: function forwardAsync(input) {
+      var _this = this;
+      return new Promise(function (resolve) {
+        var output = input.clone();
+        var l = 0;
+        var _next = function next() {
+          return _this.layers[l].forwardAsync(output).then(function (out) {
+            output.destroy();
+            output = out;
+            if (l < _this.layers.length - 1) {
+              l++;
+              _next();
+            } else {
+              resolve(output);
+            }
+          });
+        };
+        _next();
+      });
+    }
+  }, {
     key: "backward",
-    value: function backward(X, Y, regularization) {
+    value: function backward(X, regularization, sigma) {
       var m = X.cols();
-      var predictions = this.forward(X);
-      var sigma = predictions.subtract(Y);
-      for (var layer = this.layers.length - 1; layer >= 0; layer -= 1) {
-        sigma = this.layers[layer].getBackPropagation().propagate(X, m, regularization, this.layers[layer], sigma);
+      var currentSigma = sigma;
+      for (var i = this.layers.length - 1; i >= 0; i -= 1) {
+        var layer = this.layers[i];
+        currentSigma = layer.getBackPropagation().propagate(X, m, regularization, layer, currentSigma);
       }
-    }
-  }, {
-    key: "loss",
-    value: function loss(correctOutput, predictions) {
-      return this.layers[this.layers.length - 1].loss(correctOutput, predictions);
-    }
-  }, {
-    key: "error",
-    value: function error(miniBatchSize) {
-      return this.layers[this.layers.length - 1].error(miniBatchSize);
     }
   }, {
     key: "save",
@@ -1595,6 +1637,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AbstractTrainer: () => (/* binding */ AbstractTrainer)
 /* harmony export */ });
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _readOnlyError(r) { throw new TypeError('"' + r + '" is read-only'); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -1602,10 +1645,8 @@ function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 var AbstractTrainer = /*#__PURE__*/function () {
-  function AbstractTrainer(network, optimizer) {
+  function AbstractTrainer(network, optimizer, costFunction) {
     _classCallCheck(this, AbstractTrainer);
-    _defineProperty(this, "network", null);
-    _defineProperty(this, "optimizer", null);
     _defineProperty(this, "regularization", 1e-4);
     _defineProperty(this, "iterations", 1000);
     _defineProperty(this, "learningRate", 0.001);
@@ -1616,6 +1657,7 @@ var AbstractTrainer = /*#__PURE__*/function () {
     });
     this.network = network;
     this.optimizer = optimizer;
+    this.costFunction = costFunction;
   }
   return _createClass(AbstractTrainer, [{
     key: "setRegularization",
@@ -1655,35 +1697,169 @@ var AbstractTrainer = /*#__PURE__*/function () {
     }
   }, {
     key: "cost",
-    value: function cost(inputDataset, outputDataset) {
-      var numberOfExamples = inputDataset.getNumberOfExamples();
-      var accuracy = 0;
-      var penalty = 0;
-      var cost = 0;
-      this.network.getLayers().forEach(function (layer) {
-        penalty += layer.penalty().get()[0];
-      });
-      var predictions = this.network.forward(inputDataset.data.transpose());
-      var correctOutput = outputDataset.data.transpose();
+    value: function cost(predictions, correctOutput) {
       var miniBatchSize = correctOutput.cols();
-      console.log("SIZE", miniBatchSize);
-      var loss = this.network.loss(correctOutput, predictions);
-      var error = this.network.error(miniBatchSize);
-      cost = (error * loss + this.regularization * penalty / (2.0 * miniBatchSize)) / (miniBatchSize * (miniBatchSize / miniBatchSize));
-      for (var i = 0; i < predictions.cols(); i += 1) {
-        var p = predictions.col(i).maxCoeff();
-        var o = correctOutput.col(i).maxCoeff();
-        if (p.get()[0] === o.get()[0]) {
-          accuracy++;
+      var dataLoss = this.costFunction.loss(correctOutput, predictions);
+      var regularizationPenalty = 0;
+      this.network.getLayers().forEach(function (layer) {
+        regularizationPenalty += layer.penalty().get()[0];
+      });
+      var regularizationLoss = this.regularization * regularizationPenalty / (2.0 * miniBatchSize);
+      var cost = dataLoss + regularizationLoss;
+      var correctPredictions = 0;
+      for (var i = 0; i < miniBatchSize; i += 1) {
+        var predictionIndex = predictions.col(i).maxCoeff();
+        var outputIndex = correctOutput.col(i).maxCoeff();
+        if (predictionIndex.get()[0] === outputIndex.get()[0]) {
+          correctPredictions++;
         }
       }
+      var accuracy = correctPredictions / miniBatchSize * 100.0;
       return {
         cost: cost,
-        accuracy: (accuracy - 1.0) / numberOfExamples * 100.0
+        accuracy: accuracy
       };
     }
   }]);
 }();
+
+/***/ }),
+
+/***/ "./src/typescript/Trainer/Cost/AbstractCost.ts":
+/*!*****************************************************!*\
+  !*** ./src/typescript/Trainer/Cost/AbstractCost.ts ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AbstractCost: () => (/* binding */ AbstractCost)
+/* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+var AbstractCost = /*#__PURE__*/_createClass(function AbstractCost() {
+  _classCallCheck(this, AbstractCost);
+});
+
+/***/ }),
+
+/***/ "./src/typescript/Trainer/Cost/CrossEntropyCost.ts":
+/*!*********************************************************!*\
+  !*** ./src/typescript/Trainer/Cost/CrossEntropyCost.ts ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   CrossEntropyCost: () => (/* binding */ CrossEntropyCost)
+/* harmony export */ });
+/* harmony import */ var _AbstractCost__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractCost */ "./src/typescript/Trainer/Cost/AbstractCost.ts");
+/* harmony import */ var _types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../types */ "./src/typescript/types.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+var CrossEntropyCost = /*#__PURE__*/function (_AbstractCost) {
+  function CrossEntropyCost() {
+    var _this;
+    _classCallCheck(this, CrossEntropyCost);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, CrossEntropyCost, [].concat(args));
+    _defineProperty(_this, "epsilon", 1e-8);
+    return _this;
+  }
+  _inherits(CrossEntropyCost, _AbstractCost);
+  return _createClass(CrossEntropyCost, [{
+    key: "loss",
+    value: function loss(correctOutput, predictions) {
+      var miniBatchSize = correctOutput.cols();
+      var logPredictions = predictions.add(this.epsilon).log();
+      var cost = correctOutput.multiply(logPredictions).sum().get()[0];
+      return -cost / miniBatchSize;
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(correctOutput, predictions, lastLayer) {
+      if (lastLayer.getType() === _types__WEBPACK_IMPORTED_MODULE_1__.LayerType.softmax) {
+        return predictions.subtract(correctOutput);
+      }
+      var denominator = predictions.multiply(predictions.minusOne().multiply(-1)).add(this.epsilon);
+      var dA = predictions.subtract(correctOutput).divide(denominator);
+      return dA.multiply(lastLayer.derivative(predictions));
+    }
+  }]);
+}(_AbstractCost__WEBPACK_IMPORTED_MODULE_0__.AbstractCost);
+
+/***/ }),
+
+/***/ "./src/typescript/Trainer/Cost/MeanSquaredErrorCost.ts":
+/*!*************************************************************!*\
+  !*** ./src/typescript/Trainer/Cost/MeanSquaredErrorCost.ts ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MeanSquaredErrorCost: () => (/* binding */ MeanSquaredErrorCost)
+/* harmony export */ });
+/* harmony import */ var _AbstractCost__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractCost */ "./src/typescript/Trainer/Cost/AbstractCost.ts");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+var MeanSquaredErrorCost = /*#__PURE__*/function (_AbstractCost) {
+  function MeanSquaredErrorCost() {
+    _classCallCheck(this, MeanSquaredErrorCost);
+    return _callSuper(this, MeanSquaredErrorCost, arguments);
+  }
+  _inherits(MeanSquaredErrorCost, _AbstractCost);
+  return _createClass(MeanSquaredErrorCost, [{
+    key: "loss",
+    value: function loss(correctOutput, predictions) {
+      var miniBatchSize = correctOutput.cols();
+      var error = predictions.subtract(correctOutput);
+      var cost = error.pow(2).sum().get()[0];
+      return cost / (2 * miniBatchSize);
+    }
+  }, {
+    key: "derivative",
+    value: function derivative(correctOutput, predictions, lastLayer) {
+      var dA = predictions.subtract(correctOutput);
+      return dA.multiply(lastLayer.derivative(predictions));
+    }
+  }]);
+}(_AbstractCost__WEBPACK_IMPORTED_MODULE_0__.AbstractCost);
 
 /***/ }),
 
@@ -1880,8 +2056,6 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
 function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
 function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
@@ -1889,11 +2063,20 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
 function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
 function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 var OptimizerAdagrad = /*#__PURE__*/function (_AbstractOptimizer) {
   function OptimizerAdagrad() {
+    var _this;
     _classCallCheck(this, OptimizerAdagrad);
-    return _callSuper(this, OptimizerAdagrad, arguments);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, OptimizerAdagrad, [].concat(args));
+    _defineProperty(_this, "epsilon", 1e-8);
+    return _this;
   }
   _inherits(OptimizerAdagrad, _AbstractOptimizer);
   return _createClass(OptimizerAdagrad, [{
@@ -1905,9 +2088,9 @@ var OptimizerAdagrad = /*#__PURE__*/function (_AbstractOptimizer) {
     key: "adagrad",
     value: function adagrad(layer, learningRate) {
       layer.dW = layer.dW.add(layer.gW.pow(2));
-      layer.W = layer.W.subtract(layer.gW.multiply(learningRate).divide(layer.dW.sqrt()));
+      layer.W = layer.W.subtract(layer.gW.multiply(learningRate).divide(layer.dW.add(this.epsilon).sqrt()));
       layer.db = layer.db.add(layer.gb.pow(2));
-      layer.b = layer.b.subtract(layer.gb.multiply(learningRate).divide(layer.db.sqrt()));
+      layer.b = layer.b.subtract(layer.gb.multiply(learningRate).divide(layer.db.add(this.epsilon).sqrt()));
     }
   }]);
 }(_AbstractOptimizer__WEBPACK_IMPORTED_MODULE_0__.AbstractOptimizer);
@@ -2427,9 +2610,9 @@ function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf 
 
 
 var Trainer = /*#__PURE__*/function (_AbstractTrainer) {
-  function Trainer() {
+  function Trainer(network, optimizer, costFunction) {
     _classCallCheck(this, Trainer);
-    return _callSuper(this, Trainer, arguments);
+    return _callSuper(this, Trainer, [network, optimizer, costFunction]);
   }
   _inherits(Trainer, _AbstractTrainer);
   return _createClass(Trainer, [{
@@ -2437,22 +2620,24 @@ var Trainer = /*#__PURE__*/function (_AbstractTrainer) {
     value: function train(inputDataset, outputDataset) {
       var _this = this;
       var numberOfExamples = inputDataset.getNumberOfExamples();
+      var X = inputDataset.data.transpose();
+      var Y = outputDataset.data.transpose();
       var t = 0;
       this.optimizer.setBatchSize(numberOfExamples);
       this.optimizer.setLearningRate(this.learningRate);
       for (var i = 0; i < this.iterations; i += 1) {
         var startTime = new Date().getTime();
-        this.network.backward(inputDataset.data.transpose(), outputDataset.data.transpose(), this.regularization);
+        var predictions = this.network.forward(X);
+        var sigma = this.costFunction.derivative(Y, predictions, this.network.getLastLayer());
+        this.network.backward(X, this.regularization, sigma);
         this.optimizer.setT(++t);
         this.network.getLayers().forEach(function (layer) {
           _this.optimizer.optimize(layer);
         });
-        if (this.verbose) {
-          if ((i + 1) % this.verboseStep === 0) {
-            var currentResult = this.cost(inputDataset, outputDataset);
-            var endTime = new Date().getTime();
-            console.log("Iteration: ".concat(i + 1, " | Cost: ").concat((0,impulse_math_ts__WEBPACK_IMPORTED_MODULE_1__.round)(currentResult.cost, 5), " | Accuracy: ").concat((0,impulse_math_ts__WEBPACK_IMPORTED_MODULE_1__.round)(currentResult.accuracy, 2), "% | Time: ").concat((endTime - startTime) / 1000, " s."));
-          }
+        if (this.verbose && (i + 1) % this.verboseStep === 0) {
+          var currentResult = this.cost(predictions, Y);
+          var endTime = new Date().getTime();
+          console.log("Iteration: ".concat(i + 1, " | Cost: ").concat((0,impulse_math_ts__WEBPACK_IMPORTED_MODULE_1__.round)(currentResult.cost, 5), " | Accuracy: ").concat((0,impulse_math_ts__WEBPACK_IMPORTED_MODULE_1__.round)(currentResult.accuracy, 2), "% | Time: ").concat((endTime - startTime) / 1000, " s."));
         }
         this.stepCallback({
           iteration: i
@@ -2614,6 +2799,7 @@ var __webpack_exports__ = {};
   \********************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Cost: () => (/* binding */ Cost),
 /* harmony export */   Layer: () => (/* binding */ Layer),
 /* harmony export */   Math: () => (/* binding */ Math),
 /* harmony export */   Network: () => (/* binding */ Network),
@@ -2628,6 +2814,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Trainer_Optimizer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Trainer/Optimizer */ "./src/typescript/Trainer/Optimizer/index.ts");
 /* harmony import */ var _Trainer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Trainer */ "./src/typescript/Trainer/index.ts");
 /* harmony import */ var _Network__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Network */ "./src/typescript/Network/index.ts");
+/* harmony import */ var _Trainer_Cost_MeanSquaredErrorCost__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Trainer/Cost/MeanSquaredErrorCost */ "./src/typescript/Trainer/Cost/MeanSquaredErrorCost.ts");
+/* harmony import */ var _Trainer_Cost_CrossEntropyCost__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Trainer/Cost/CrossEntropyCost */ "./src/typescript/Trainer/Cost/CrossEntropyCost.ts");
+
+
 
 
 
@@ -2667,6 +2857,10 @@ var Trainer = {
 var Network = {
   NetworkRNN: _Network__WEBPACK_IMPORTED_MODULE_5__.NetworkRNN,
   NetworkLSTM: _Network__WEBPACK_IMPORTED_MODULE_5__.NetworkLSTM
+};
+var Cost = {
+  MeanSquaredErrorCost: _Trainer_Cost_MeanSquaredErrorCost__WEBPACK_IMPORTED_MODULE_6__.MeanSquaredErrorCost,
+  CrossEntropyCost: _Trainer_Cost_CrossEntropyCost__WEBPACK_IMPORTED_MODULE_7__.CrossEntropyCost
 };
 
 })();

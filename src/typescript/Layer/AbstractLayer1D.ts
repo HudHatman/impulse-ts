@@ -1,6 +1,6 @@
 import { AbstractLayer } from "./AbstractLayer";
 import { Layers } from "../types";
-import { CalcMatrix2D, CalcScalar } from "impulse-math-device-ts";
+import { CalcMatrix2D, CalcScalar, Calc } from "impulse-math-device-ts";
 
 abstract class AbstractLayer1D extends AbstractLayer {
   protected depth = 1;
@@ -66,10 +66,39 @@ abstract class AbstractLayer1D extends AbstractLayer {
     this.db.setZeros();
   }
 
-  forward(input: CalcMatrix2D): CalcMatrix2D {
+  forward(input: CalcMatrix2D): Promise<CalcMatrix2D> {
     this.Z = this.W.dot(input).add(this.b.replicate(1, input.cols()));
     this.A = this.activation(this.Z);
     return this.A;
+  }
+
+  forwardAsync(input: CalcMatrix2D): Promise<CalcMatrix2D> {
+    return new Promise((resolve) => {
+        Promise.all([
+          this.W.calcAsync((calc) => {
+            return calc.dot(input);
+          }),
+          this.b.calcAsync((calc) => {
+            return calc.replicate(1, input.cols());
+          })
+        ]).then(([dot, replicate]) => {
+          dot.calcAsync((calc) => {
+            return calc.add(replicate)
+          }).then((added) => {
+            this.Z.copyFrom(added);
+            this.activationAsync(this.Z).then((activation) => {
+              this.A.copyFrom(activation);
+
+              dot.destroy();
+              replicate.destroy();
+              added.destroy();
+              activation.destroy();
+
+              resolve(this.A);
+          })
+        })
+      });
+    })
   }
 
   is1D(): boolean {

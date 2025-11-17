@@ -7,22 +7,22 @@ class LogisticLayer extends AbstractLayer1D {
     return m.logisticForwardPropagation();
   }
 
+  activationAsync(m: CalcMatrix2D): Promise<CalcMatrix2D> {
+    return new Promise((resolve) => {
+      m.calcAsync((calc) => {
+        calc.logisticForwardPropagation().then((a) => {
+          resolve(a);
+        })
+      })
+    })
+  }
+
   getType(): LayerType {
     return LayerType.logistic;
   }
 
   derivative(delta: CalcMatrix2D): CalcMatrix2D {
     return delta.logisticBackwardPropagation();
-  }
-  public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
-    const result = correctOutput
-      .multiply(predictions.log())
-      .add(correctOutput.minusOne().multiply(predictions.logMinusOne()));
-    return result.sum().get()[0];
-  }
-
-  public error(batchSize: number) {
-    return -1.0 / batchSize;
   }
 }
 

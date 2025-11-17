@@ -21,6 +21,7 @@
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
+    "prepare": "npm run build",
     "build": "npm run build-dev && npm run build-prod",
     "build-dev": "webpack --config ./configs/dev.js",
     "build-prod": "webpack --config ./configs/prod.js",

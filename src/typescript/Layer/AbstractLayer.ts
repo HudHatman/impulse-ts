@@ -68,19 +68,13 @@ abstract class AbstractLayer {
 
   abstract activation(value: CalcMatrix2D): CalcMatrix2D;
 
+  abstract activationAsync(value: CalcMatrix2D): Promise<CalcMatrix2D>;
+
   abstract getType(): string;
 
   abstract derivative(delta: CalcMatrix2D): CalcMatrix2D;
 
   abstract penalty(): number;
-
-  public loss(correctOutput: CalcMatrix2D, predictions: CalcMatrix2D) {
-    return 0;
-  }
-
-  public error(batchSize: number) {
-    return 0;
-  }
 }
 
 export { AbstractLayer };

@@ -7,6 +7,16 @@ class ReluLayer extends AbstractLayer1D {
     return m.setMin(0.0);
   }
 
+  activationAsync(m: CalcMatrix2D): Promise<CalcMatrix2D> {
+    return new Promise((resolve) => {
+      m.calcAsync((calc) => {
+        calc.setMin(0.0).then((a) => {
+          resolve(a);
+        })
+      })
+    })
+  }
+
   getType(): LayerType {
     return LayerType.relu;
   }

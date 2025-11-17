@@ -4,9 +4,14 @@ import { Backpropagation3Dto1D } from "./Backpropagation3Dto1D";
 import { BackpropagationToMaxPool } from "./BackpropagationToMaxPool";
 import { BackpropagationToConv } from "./BackpropagationToConv";
 import { AbstractBackPropagation } from "./AbstractBackpropagation";
+import { BackpropagationToRecurrent } from "./BackpropagationToRecurrent";
 
 export class BackpropagationFactory {
   static create(previousLayer: Layers, layer: Layers): AbstractBackPropagation | null {
+    if (layer.getType() === LayerType.rnnlayer) {
+      return new BackpropagationToRecurrent(layer, previousLayer);
+    }
+
     if (previousLayer == null) {
       if (layer.is1D()) {
         return new Backpropagation1Dto1D(layer, previousLayer);

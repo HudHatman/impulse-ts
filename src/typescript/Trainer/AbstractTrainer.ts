@@ -1,6 +1,8 @@
 import { Network } from "../Network";
 import { AbstractOptimizer } from "./Optimizer/AbstractOptimizer";
 import { Dataset } from "impulse-dataset-ts/src/typescript/Dataset/Dataset";
+import { CalcMatrix2D } from "impulse-math-device-ts";
+import { AbstractCost } from "./Cost/AbstractCost";
 
 export interface CostResult {
   cost: number;
@@ -12,8 +14,9 @@ export interface StepCallbackParameters {
 }
 
 export abstract class AbstractTrainer {
-  network: Network | null = null;
-  optimizer: AbstractOptimizer | null = null;
+  network: Network;
+  optimizer: AbstractOptimizer;
+  costFunction: AbstractCost;
   regularization = 1e-4;
   iterations = 1000;
   learningRate = 0.001;
@@ -21,9 +24,10 @@ export abstract class AbstractTrainer {
   verboseStep = 1;
   stepCallback = (data: StepCallbackParameters): void => undefined;
 
-  constructor(network: Network, optimizer: AbstractOptimizer) {
+  constructor(network: Network, optimizer: AbstractOptimizer, costFunction: AbstractCost) {
     this.network = network;
     this.optimizer = optimizer;
+    this.costFunction = costFunction;
   }
 
   abstract train(inputDataset: Dataset, outputDataset: Dataset): AbstractTrainer;
@@ -40,7 +44,7 @@ export abstract class AbstractTrainer {
 
   setLearningRate(learningRate: number): AbstractTrainer {
     this.learningRate = learningRate;
-    return this;
+    return this
   }
 
   setVerbose(verbose: boolean): AbstractTrainer {
@@ -58,41 +62,33 @@ export abstract class AbstractTrainer {
     return this;
   }
 
-  cost(inputDataset: Dataset, outputDataset: Dataset): CostResult {
-    const numberOfExamples = inputDataset.getNumberOfExamples();
-
-    let accuracy = 0;
-    let penalty = 0;
-    let cost = 0;
-
-    this.network.getLayers().forEach((layer) => {
-      penalty += layer.penalty().get()[0];
-    });
-
-    const predictions = this.network.forward(inputDataset.data.transpose());
-    const correctOutput = outputDataset.data.transpose();
-
+  cost(predictions: CalcMatrix2D, correctOutput: CalcMatrix2D): CostResult {
     const miniBatchSize = correctOutput.cols();
-    console.log("SIZE", miniBatchSize);
-    const loss = this.network.loss(correctOutput, predictions);
-    const error = this.network.error(miniBatchSize);
+    const dataLoss = this.costFunction.loss(correctOutput, predictions);
 
-    cost =
-      (error * loss + (this.regularization * penalty) / (2.0 * miniBatchSize)) /
-      (miniBatchSize * (miniBatchSize / miniBatchSize));
+    let regularizationPenalty = 0;
+    this.network.getLayers().forEach((layer) => {
+      regularizationPenalty += layer.penalty().get()[0];
+    });
+    const regularizationLoss = (this.regularization * regularizationPenalty) / (2.0 * miniBatchSize);
 
-    for (let i = 0; i < predictions.cols(); i += 1) {
-      const p = predictions.col(i).maxCoeff();
-      const o = correctOutput.col(i).maxCoeff();
+    const cost = dataLoss + regularizationLoss;
 
-      if (p.get()[0] === o.get()[0]) {
-        accuracy++;
+    let correctPredictions = 0;
+    for (let i = 0; i < miniBatchSize; i += 1) {
+      const predictionIndex = predictions.col(i).maxCoeff();
+      const outputIndex = correctOutput.col(i).maxCoeff();
+
+      if (predictionIndex.get()[0] === outputIndex.get()[0]) {
+        correctPredictions++;
       }
     }
 
+    const accuracy = (correctPredictions / miniBatchSize) * 100.0;
+
     return {
       cost,
-      accuracy: ((accuracy - 1.0) / numberOfExamples) * 100.0,
+      accuracy,
     };
   }
 }
