@@ -422,12 +422,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Backpropagation3Dto1D__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Backpropagation3Dto1D */ "./src/typescript/Layer/Backpropagation/Backpropagation3Dto1D.ts");
 /* harmony import */ var _BackpropagationToMaxPool__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BackpropagationToMaxPool */ "./src/typescript/Layer/Backpropagation/BackpropagationToMaxPool.ts");
 /* harmony import */ var _BackpropagationToConv__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./BackpropagationToConv */ "./src/typescript/Layer/Backpropagation/BackpropagationToConv.ts");
+/* harmony import */ var _BackpropagationToRecurrent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./BackpropagationToRecurrent */ "./src/typescript/Layer/Backpropagation/BackpropagationToRecurrent.ts");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 
 
@@ -440,6 +442,9 @@ var BackpropagationFactory = /*#__PURE__*/function () {
   return _createClass(BackpropagationFactory, null, [{
     key: "create",
     value: function create(previousLayer, layer) {
+      if (layer.getType() === _types__WEBPACK_IMPORTED_MODULE_0__.LayerType.rnnlayer) {
+        return new _BackpropagationToRecurrent__WEBPACK_IMPORTED_MODULE_5__.BackpropagationToRecurrent(layer, previousLayer);
+      }
       if (previousLayer == null) {
         if (layer.is1D()) {
           return new _Backpropagation1Dto1D__WEBPACK_IMPORTED_MODULE_1__.Backpropagation1Dto1D(layer, previousLayer);
@@ -682,6 +687,104 @@ var BackpropagationToMaxPool = /*#__PURE__*/function (_AbstractBackPropagat) {
 
 /***/ }),
 
+/***/ "./src/typescript/Layer/Backpropagation/BackpropagationToRecurrent.ts":
+/*!****************************************************************************!*\
+  !*** ./src/typescript/Layer/Backpropagation/BackpropagationToRecurrent.ts ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BackpropagationToRecurrent: () => (/* binding */ BackpropagationToRecurrent)
+/* harmony export */ });
+/* harmony import */ var _AbstractBackpropagation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AbstractBackpropagation */ "./src/typescript/Layer/Backpropagation/AbstractBackpropagation.ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! impulse-math-device-ts */ "impulse-math-device-ts");
+/* harmony import */ var impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+
+
+var BackpropagationToRecurrent = /*#__PURE__*/function (_AbstractBackPropagat) {
+  function BackpropagationToRecurrent() {
+    _classCallCheck(this, BackpropagationToRecurrent);
+    return _callSuper(this, BackpropagationToRecurrent, arguments);
+  }
+  _inherits(BackpropagationToRecurrent, _AbstractBackPropagat);
+  return _createClass(BackpropagationToRecurrent, [{
+    key: "propagate",
+    value: function propagate(input, numberOfExamples, regularization, layer, sigma) {
+      var rnnLayer = layer;
+      var _rnnLayer$cache = rnnLayer.cache,
+        A = _rnnLayer$cache.A,
+        X = _rnnLayer$cache.X;
+      var sequenceLength = X.length;
+
+      // Inicjalizacja gradientu dla stanu ukrytego
+      var daNext = new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D(rnnLayer.getWidth(), 1).setZeros();
+
+      // Pętla wsteczna po krokach czasowych (Backpropagation Through Time)
+      for (var t = sequenceLength - 1; t >= 0; t--) {
+        var dyt = sigma.col(t); // Gradient kosztu względem wyjścia w kroku t
+
+        // 1. Oblicz gradienty dla wag wyjściowych (Wya, by)
+        rnnLayer.dWya = rnnLayer.dWya.add(dyt.dot(A[t + 1].transpose()));
+        rnnLayer.dby = rnnLayer.dby.add(dyt);
+
+        // 2. Oblicz gradient propagowany do stanu ukrytego
+        // da = dC/da<t> = (dC/dy<t> * dy<t>/da<t>) + da_next
+        var da = rnnLayer.Wya.transpose().dot(dyt).add(daNext);
+
+        // 3. Oblicz gradient dla funkcji aktywacji tanh
+        // dtanh = da<t> * (1 - a<t>^2)
+        var dtanh = da.multiply(rnnLayer.derivative(A[t + 1]));
+
+        // 4. Oblicz gradienty dla wag rekurencyjnych i wejściowych (Waa, Wax, ba)
+        rnnLayer.dWax = rnnLayer.dWax.add(dtanh.dot(X[t].transpose()));
+        rnnLayer.dWaa = rnnLayer.dWaa.add(dtanh.dot(A[t].transpose()));
+        rnnLayer.dba = rnnLayer.dba.add(dtanh);
+
+        // 5. Zaktualizuj gradient dla poprzedniego kroku czasowego
+        // da_next (dla kroku t-1) = Waa^T * dtanh
+        daNext = rnnLayer.Waa.transpose().dot(dtanh);
+      }
+
+      // Normalizacja gradientów i dodanie regularyzacji
+      var clipValue = 5; // Zapobieganie eksplodującym gradientom
+      for (var _i = 0, _arr = [rnnLayer.dWax, rnnLayer.dWaa, rnnLayer.dWya, rnnLayer.dba, rnnLayer.dby]; _i < _arr.length; _i++) {
+        var d = _arr[_i];
+        d.clip(-clipValue, clipValue);
+      }
+
+      // Zastosowanie normalizacji przez liczbę przykładów (w tym przypadku 1, bo batching nie jest zaimplementowany)
+      // rnnLayer.dWax = rnnLayer.dWax.divide(numberOfExamples);
+      // ... etc. dla reszty
+
+      // Dodanie regularyzacji
+      rnnLayer.dWax = rnnLayer.dWax.add(rnnLayer.Wax.multiply(regularization));
+      rnnLayer.dWaa = rnnLayer.dWaa.add(rnnLayer.Waa.multiply(regularization));
+      rnnLayer.dWya = rnnLayer.dWya.add(rnnLayer.Wya.multiply(regularization));
+
+      // Warstwa rekurencyjna zazwyczaj nie propaguje błędu dalej w ten sposób.
+      // Zwracamy pustą macierz, aby zatrzymać propagację.
+      return new impulse_math_device_ts__WEBPACK_IMPORTED_MODULE_1__.CalcMatrix2D();
+    }
+  }]);
+}(_AbstractBackpropagation__WEBPACK_IMPORTED_MODULE_0__.AbstractBackPropagation);
+
+/***/ }),
+
 /***/ "./src/typescript/Layer/Logistic.ts":
 /*!******************************************!*\
   !*** ./src/typescript/Layer/Logistic.ts ***!
@@ -849,6 +952,11 @@ var SoftmaxLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   }
   _inherits(SoftmaxLayer, _AbstractLayer1D);
   return _createClass(SoftmaxLayer, [{
+    key: "activationAsync",
+    value: function activationAsync(value) {
+      throw new Error("Method not implemented.");
+    }
+  }, {
     key: "activation",
     value: function activation(m) {
       return m.softmax();
@@ -959,6 +1067,11 @@ var TanhLayer = /*#__PURE__*/function (_AbstractLayer1D) {
   }
   _inherits(TanhLayer, _AbstractLayer1D);
   return _createClass(TanhLayer, [{
+    key: "activationAsync",
+    value: function activationAsync(value) {
+      throw new Error("Method not implemented.");
+    }
+  }, {
     key: "activation",
     value: function activation(m) {
       return m.tanh();

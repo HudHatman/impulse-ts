@@ -14,6 +14,10 @@ class PurelinLayer extends AbstractLayer1D {
   derivative(delta: CalcMatrix2D): CalcMatrix2D {
     return delta.setOnes();
   }
+
+  activationAsync(value: CalcMatrix2D): Promise<CalcMatrix2D> {
+    return Promise.resolve(undefined);
+  }
 }
 
 export { PurelinLayer };

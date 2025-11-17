@@ -12,6 +12,9 @@ import { AbstractLayer } from "./AbstractLayer";
  * - `depth` (outputSize): Rozmiar wektora wyjściowego w jednym kroku czasowym.
  */
 export class RecurrentLayer extends AbstractLayer {
+  activationAsync(value: CalcMatrix2D): Promise<CalcMatrix2D> {
+    throw new Error("Method not implemented.");
+  }
   // --- Wagi i Biary ---
   public Wax: CalcMatrix2D; // Wagi: Wejście -> Stan ukryty
   public Waa: CalcMatrix2D; // Wagi: Stan ukryty -> Stan ukryty
@@ -85,10 +88,7 @@ export class RecurrentLayer extends AbstractLayer {
       this.cache.X.push(xt.clone());
 
       // Obliczenie stanu ukrytego: a<t> = tanh(Waa * a<t-1> + Wax * x<t> + ba)
-      const aNext = this.Waa.dot(aPrev)
-        .add(this.Wax.dot(xt))
-        .add(this.ba)
-        .tanh();
+      const aNext = this.Waa.dot(aPrev).add(this.Wax.dot(xt)).add(this.ba).tanh();
 
       // Obliczenie wyjścia: y<t> = Wya * a<t> + by (bez aktywacji)
       const yt = this.Wya.dot(aNext).add(this.by);
